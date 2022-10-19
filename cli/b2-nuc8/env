@@ -1,0 +1,7 @@
+HOST="b2-nuc8"
+HOST_PROJ_DIR=/home/b2/r2b2_project
+
+# REPOS="b2-base ros-realsense b2-rplidar b2-ekf b2-nav roboclaw_driver"
+# CONTAINERS="base_nodes pointcloud rplidar ekf_odom b2-nav"
+REPOS="r2b2"
+CONTAINERS="r2b2-robot"
