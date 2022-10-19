@@ -1,0 +1,20 @@
+launch:
+
+- arg:
+    name: "rqtconfig"
+    default: "/home/jsheaffe/r2b2_project/ros2-dev/config/main.perspective"
+- arg:
+    name: "rvizconfig"
+    default: "/home/jsheaffe/r2b2_project/ros2-dev/config/config.rviz"
+
+- node:
+    pkg: rqt_gui
+    exec: rqt_gui
+    name: rtq_gui  
+    args: "--perspective-file $(var rqtconfig)"
+
+- node:
+    pkg: rviz2
+    exec: rviz2
+    name: rviz2
+    args: "-d $(var rvizconfig)"
