@@ -1,0 +1,45 @@
+launch:
+
+# - arg:
+#     name: "rqtconfig"
+#     default: "/home/jsheaffe/r2b2_project/r2b2/ros2-dev/config/main.perspective"
+# - arg:
+#     name: "rvizconfig"
+#     default: "/home/jsheaffe/r2b2_project/r2b2/ros2-dev/config/config.rviz"
+
+- node:
+    pkg: roboclaw_driver2
+    exec: roboclaw_node
+    name: roboclaw
+    param:
+      - name: speed_cmd_topic
+        value: roboclaw/speed_command
+      - name: stats_topic
+        value: roboclaw/stats
+      - name: test_mode
+        value: False
+      - name: dev_names
+        value: "/dev/ttyACM0,/dev/ttyACM1"
+    # args: "--ros-args --log-level roboclaw_driver:=debug"
+
+- node:
+    pkg: r2b2_base
+    exec: base_node
+    name: base_node
+    param:
+      - name: loop_hz
+        value: 1
+      - name: cmd_vel_topic
+        value: cmd_vel
+      - name: odom_topic
+        value: odom
+      - name: speed_command_topic
+        value: roboclaw/speed_command
+      - name: roboclaw_front_stats_topic
+        value: roboclaw/stats
+      - name: log_leve
+        value: info
+      - name: publish_odom_tf
+        value: True
+    # args: "--ros-args --log-level base_node:=debug"
+

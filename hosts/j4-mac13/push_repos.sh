@@ -1,11 +1,14 @@
-# Variables
+#!/bin/bash
 
-LOCAL_PROJ_DIR=~/Dropbox/code-projects/r2b2_project
-HOSTS="ros-dev b2-pi4 b2-nuc8"
+MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+# source ${MYDIR}/../common/common.sh
+# source ${MYDIR}/env
 
-# ROS_MASTER_URI="http://${ROS_MASTER_HOST}:11311/"
+LOCAL_PROJ_DIR="${HOME}/Dropbox/code-projects/r2b2_project"
+REPOS="r2b2"
+HOST="b2-nuc8"
+HOST_PROJ_DIR="/home/b2/r2b2_project"
 
-# Functions
 function push_dir_to_host {
     # Follows the SCP pattern: user@host:project_dir/dir
     HOST=$1
@@ -19,3 +22,9 @@ function push_dir_to_host {
     "${LOCAL_PROJ_DIR}/${SYNC_DIR}" \
     "${HOST}:${HOST_PROJ_DIR}" | grep -v "/.git/"
 }
+
+echo "~~~~ Pushing to ${HOST} ~~~~"
+for REPO in ${REPOS}; do
+    echo "Pushing ${REPO}"
+    push_dir_to_host ${HOST} ${HOST_PROJ_DIR} ${REPO}
+done
