@@ -1,0 +1,7 @@
+launch:
+
+- include:
+    file: "$(dirname)/base.launch.yaml"
+    arg:
+      - name: test_mode
+        value: 'True'

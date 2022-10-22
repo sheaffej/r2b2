@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<robot name="B2" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- Configurable Measurements -->
+    <xacro:property name="wheel_dia" value="0.064" />
+    <xacro:property name="wheel_width" value="0.025" />
+    <xacro:property name="wheel_x_from_ctr" value="0.095" />
+    <xacro:property name="wheel_y_from_ctr" value="0.0875" />
+
+    <xacro:property name="base_x_len" value="0.250" />
+    <xacro:property name="base_y_width" value="0.200" />
+    <xacro:property name="base_plate_ht" value="0.006" />
+    <xacro:property name="base_standoff_ht" value="0.060" />
+
+    <xacro:property name="motor_mount_ht" value="0.0145" />
+    <xacro:property name="sensor_arch_ht" value="0.062" />
+
+    <!-- Derived Measurements -->
+    <xacro:property name="base_box_ht" value="${base_plate_ht + base_standoff_ht + base_plate_ht}" />
+    <xacro:property name="base_box_ht_from_floor" value="${wheel_dia/2 + motor_mount_ht}"/>
+    <xacro:property name="base_box_top_ht" value="${base_box_ht_from_floor + base_box_ht}"/>
+
+
+    <!-- Joints -->
+    <joint name="camera_link_joint" type="fixed">
+        <origin xyz="0.143 0.0 0.185" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="camera_link"/>
+    </joint>
+
+    <joint name="imu_link_join" type="fixed">
+        <origin xyz="0.040 -0.040 ${base_box_top_ht + sensor_arch_ht + 0.008}" 
+                rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="imu_link"/>
+    </joint>
+
+    <joint name="scanner_link_join" type="fixed">
+        <origin xyz="0.080 0 0.228" rpy="0.0 0.0 3.14159"/>
+        <parent link="base_link"/>
+        <child link="scanner_link"/>
+    </joint>
+
+
+    <!-- Links -->
+    <link name="base_link">
+
+        <visual name="frame_box">
+            <!-- Top of frame is 120mm from origin -->
+            <geometry>
+                <box size="${base_x_len} ${base_y_width} ${base_box_ht}" />
+            </geometry>
+            <origin xyz="0.0 0.0 ${base_box_ht_from_floor + base_box_ht/2}"/>
+            <material name="White" />
+        </visual>
+
+        <visual name="nuc">
+            <!-- Top of NUC is 156mm from origin -->
+            <geometry>
+                <!-- NUC8i5BEK 4.60" x 4.40" x 1.41" (117 mm x 112 mm x 36 mm) -->
+                <box size="0.117 0.112 0.036"/>
+            </geometry>
+            <origin xyz="-0.0335 0.0 ${base_box_top_ht + 0.036/2}"/>
+            <material name="White" />
+        </visual>
+
+        <visual name="raspberry_pi4">
+            <geometry>
+                <box size="0.070 0.094 0.030"/>
+            </geometry>
+            <origin xyz="0.077 0.0 ${base_box_top_ht + 0.030/2}"/>
+            <material name="White" />
+        </visual>
+
+        <!-- Wheels -->
+        <visual name="front_left_wheel">
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+            <origin xyz="${wheel_x_from_ctr} ${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
+            <material name="Black" />
+        </visual>
+        <visual name="front_right_wheel">
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+            <origin xyz="${wheel_x_from_ctr} -${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
+            <material name="Black" />
+        </visual>
+        <visual name="rear_left_wheel">
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+            <origin xyz="-${wheel_x_from_ctr} ${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
+            <material name="Black" />
+        </visual>
+        <visual name="rear_right_wheel">
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+            <origin xyz="-${wheel_x_from_ctr} -${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
+            <material name="Black" />
+        </visual>
+    
+    </link>
+
+    <link name="camera_link">
+        <visual>
+        <geometry>
+            <box size="0.025 0.085 0.025"/>
+        </geometry>
+        <material name="Sky Blue" />
+        </visual>
+    </link>
+
+    <link name="imu_link">
+        <visual>
+            <geometry>
+                <box size="0.02032 0.0127 0.003"/>
+            </geometry>
+            <material name="PCB Green" />
+        </visual>
+    </link>
+
+    <link name="scanner_link">        
+        <visual>
+            <geometry>
+                <!--
+                    Rotating cylinder is 24mm tall
+                    Receive sensor is 16.5mm above bottom surface
+                    So the visual should be dropped by the difference
+                        y = (24/2) - 16.5 = -4.5mm
+                -->
+                <cylinder radius="0.035" length="0.024"/>
+            </geometry>
+            <origin xyz="0 0 -0.0045"/>
+            <material name="Black" />
+        </visual>
+        <visual>
+            <geometry>
+                <box size="0.100 0.070 0.033"/>
+            </geometry>
+            <origin xyz="0.015 0.0 -0.033"/>
+            <material name="Black" />
+        </visual>
+    </link>
+
+    <!-- Materials -->
+    <material name="Black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+    </material>
+
+    <material name="Sky Blue">
+        <color rgba="0.125 0.525 0.90 1.0"/>
+    </material>
+
+    <material name="White">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+
+    <material name="PCB Green">
+        <color rgba="0.0 0.468 0.0 1.0"/>
+    </material>
+
+    <material name="Gray">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+    </material>
+
+</robot>

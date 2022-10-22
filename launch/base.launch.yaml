@@ -1,11 +1,16 @@
 launch:
 
+- arg:
+    name: robot_model
+    default: "$(dirname)/../urdf/r2b2.urdf"
+- arg:
+    name: test_mode
+    default: 'False'
+
 # - arg:
-#     name: "rqtconfig"
-#     default: "/home/jsheaffe/r2b2_project/r2b2/ros2-dev/config/main.perspective"
-# - arg:
-#     name: "rvizconfig"
-#     default: "/home/jsheaffe/r2b2_project/r2b2/ros2-dev/config/config.rviz"
+#     name: robot_description
+#     default: "$(find xacro)/xacro $(arg model)"
+
 
 - node:
     pkg: roboclaw_driver2
@@ -17,7 +22,7 @@ launch:
       - name: stats_topic
         value: roboclaw/stats
       - name: test_mode
-        value: False
+        value: $(var test_mode)
       - name: dev_names
         value: "/dev/ttyACM0,/dev/ttyACM1"
     # args: "--ros-args --log-level roboclaw_driver:=debug"
@@ -43,3 +48,18 @@ launch:
         value: True
     # args: "--ros-args --log-level base_node:=debug"
 
+- node:
+    pkg: joint_state_publisher
+    exec: joint_state_publisher
+    name: joint_state_publisher
+    param:
+      - name: use_gui
+        value: False
+
+- node:
+    pkg: robot_state_publisher
+    exec: robot_state_publisher
+    name: robot_state_publisher
+    param:
+      - name: robot_description
+        value: "$(command 'xacro $(dirname)/../urdf/r2b2.xacro')"

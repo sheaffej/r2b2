@@ -14,7 +14,9 @@ echo
 pushd ${ROS_WS}
 rm -Rf install build logs
 if [[ ! -f ${HOME}/.apt-rosdep-updated ]]; then
-    apt update
+    if [[ $USER == "root" ]]; then
+        apt update
+    fi
     rosdep update
     touch ${HOME}/.apt-rosdep-updated
 else

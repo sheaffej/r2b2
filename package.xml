@@ -9,6 +9,9 @@
   <depend>rclpy</depend>
   <depend>std_msgs</depend>
   <depend>ros2launch</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>xacro</depend>
 
   <!-- Lookup Python packages here: https://github.com/ros/rosdistro/blob/master/rosdep/python.yaml -->
   <depend>python3-flake8</depend>

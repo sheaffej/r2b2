@@ -4,4 +4,4 @@
 B2_SCRIPTS_DIR="/home/b2/r2b2_project/r2b2/hosts/b2-nuc8/scripts"
 
 ssh -Tq -o ConnectTimeout=1 b2-nuc8 "${B2_SCRIPTS_DIR}/container-d.sh \
-ros2 launch /ros2/src/r2b2/launch/stub.launch.py"
+ros2 launch /ros2/src/r2b2/launch/base-stub.launch.yaml"
