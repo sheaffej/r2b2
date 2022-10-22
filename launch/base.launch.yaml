@@ -17,6 +17,8 @@ launch:
     exec: roboclaw_node
     name: roboclaw
     param:
+      - name: loop_hz
+        value: 20
       - name: speed_cmd_topic
         value: roboclaw/speed_command
       - name: stats_topic
@@ -33,7 +35,7 @@ launch:
     name: base_node
     param:
       - name: loop_hz
-        value: 1
+        value: 20
       - name: cmd_vel_topic
         value: cmd_vel
       - name: odom_topic
