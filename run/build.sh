@@ -22,7 +22,8 @@ if [[ ! -f ${HOME}/.apt-rosdep-updated ]]; then
 else
     echo "Skipping apt and rosdep update as it was previously run."
 fi
-rosdep install --from-paths src -y 
+rosdep install --from-paths src -y -i --skip-keys=librealsense2
+
 
 echo
 echo "~~~~~~~~~~~~~~~~~~~~~~~~"
@@ -32,7 +33,8 @@ echo
 
 # This also assumes that the distro's setup.bash is called
 # in entrypoint.sh via .bashrc
+bash -c "colcon build --packages-up-to-regex realsense2 2>/dev/null"
 bash -c "colcon build --packages-select roboclaw_interfaces roboclaw_driver2"
-bash -c "colcon build --packages-select r2b2 r2b2_base --symlink-install"
+bash -c "colcon build --packages-select r2b2 r2b2_base sllidar_ros2 --symlink-install"
 
 echo

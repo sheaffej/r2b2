@@ -7,10 +7,6 @@ launch:
     name: test_mode
     default: 'False'
 
-# - arg:
-#     name: robot_description
-#     default: "$(find xacro)/xacro $(arg model)"
-
 
 - node:
     pkg: roboclaw_driver2
@@ -65,3 +61,26 @@ launch:
     param:
       - name: robot_description
         value: "$(command 'xacro $(dirname)/../urdf/r2b2.xacro')"
+
+- node:
+    pkg: sllidar_ros2
+    exec: sllidar_node
+    param:
+      - name: serial_port
+        value: "/dev/ttyUSB0"
+      - name: serial_baudrate
+        value: 115200
+      - name: frame_id
+        value: scanner_link
+      - name: inverted
+        value: false
+      - name: angle_compensate
+        value: false
+    output: screen
+
+# Intel RealSense
+- include:
+    file: "$(find-pkg-share realsense2_camera)/launch/rs_launch.py"
+    # arg:
+    #   - name: test_mode
+    #     value: 'True'

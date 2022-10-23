@@ -10,7 +10,22 @@ RUN apt-get update \
         python-is-python3 \
         python3-pip \
         vim less \
+        software-properties-common \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+
+# ---------------------------
+# Install Intel librealsense2
+# ---------------------------
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE \
+&& sudo add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo $(lsb_release -cs) main" -u \
+&& apt-get update \
+&& sudo apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev librealsense2-dbg \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+
+# Update apt and rosdep, and don't purge the caches this time
+RUN apt-get update \
+&&  rosdep update \
+&&  touch /root/.apt-rosdep-updated
 
 # Overide the default ros_entrypoint.sh file
 ADD entrypoint.sh /entrypoint.sh
@@ -26,10 +41,6 @@ RUN echo 'alias wsenv="source /opt/ros/${ROS_DISTRO}/setup.bash && source ${ROS_
 
 RUN mkdir -p ${ROS_WS}/src
 
-# Add this package
-ADD . /workspaces/${PKG_NAME}
-RUN ln -s /workspaces/${PKG_NAME} ${ROS_WS}/src/${PKG_NAME}
-
 # -------------------------
 # Add other source packages
 # -------------------------
@@ -41,6 +52,16 @@ WORKDIR ${ROS_WS}/src
 RUN git clone https://github.com/sheaffej/roboclaw_interfaces.git
 RUN git clone https://github.com/sheaffej/roboclaw_driver2.git
 RUN git clone https://github.com/sheaffej/r2b2-base.git
+RUN git clone https://github.com/Slamtec/sllidar_ros2.git
+RUN git clone https://github.com/IntelRealSense/realsense-ros.git -b ros2-beta
+
+
+# ----------------
+# Add this package
+# ----------------
+ADD . /workspaces/${PKG_NAME}
+RUN ln -s /workspaces/${PKG_NAME} ${ROS_WS}/src/${PKG_NAME}
+
 
 # -------------------
 # Build the workspace
