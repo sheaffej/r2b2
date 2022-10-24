@@ -12,7 +12,11 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo
 
 pushd ${ROS_WS}
-rm -Rf install build logs
+
+if [[ $1 == 'clean' ]]; then
+    rm -Rf install build logs
+fi
+
 if [[ ! -f ${HOME}/.apt-rosdep-updated ]]; then
     if [[ $USER == "root" ]]; then
         apt update

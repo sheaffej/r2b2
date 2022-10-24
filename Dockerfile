@@ -11,6 +11,10 @@ RUN apt-get update \
         python3-pip \
         vim less \
         software-properties-common \
+        # navigation2 is big, so adding here
+        ros-galactic-navigation2 \
+        # Can't install nav2-bringup using rosdep, so adding here
+        ros-galactic-nav2-bringup \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 # ---------------------------

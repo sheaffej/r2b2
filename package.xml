@@ -12,6 +12,9 @@
   <depend>joint_state_publisher</depend>
   <depend>robot_state_publisher</depend>
   <depend>xacro</depend>
+  <depend>navigation2</depend>
+  <!-- <depend>nav2-bringup</depend> -->
+  <!-- <depend>rosbag2-bag-v2-plugins</depend> -->
 
   <!-- Lookup Python packages here: https://github.com/ros/rosdistro/blob/master/rosdep/python.yaml -->
   <depend>python3-flake8</depend>

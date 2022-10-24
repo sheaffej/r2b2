@@ -2,7 +2,14 @@ launch:
 
 - arg:
     name: robot_model
-    default: "$(dirname)/../urdf/r2b2.urdf"
+    default: "$(dirname)/../config/urdf/r2b2.urdf"
+- arg:
+    name: map_file
+    default: "$(dirname)/../config/map/b2-downstairs4.yaml"
+- arg:
+    name: nav_params_file
+    default: "$(dirname)/../config/params/nav2_params.yaml"
+
 - arg:
     name: test_mode
     default: 'False'
@@ -46,13 +53,13 @@ launch:
         value: True
     # args: "--ros-args --log-level base_node:=debug"
 
-- node:
-    pkg: joint_state_publisher
-    exec: joint_state_publisher
-    name: joint_state_publisher
-    param:
-      - name: use_gui
-        value: False
+# - node:
+#     pkg: joint_state_publisher
+#     exec: joint_state_publisher
+#     name: joint_state_publisher
+#     param:
+#       - name: use_gui
+#         value: False
 
 - node:
     pkg: robot_state_publisher
@@ -60,7 +67,7 @@ launch:
     name: robot_state_publisher
     param:
       - name: robot_description
-        value: "$(command 'xacro $(dirname)/../urdf/r2b2.xacro')"
+        value: "$(command 'xacro $(dirname)/../config/urdf/r2b2.xacro')"
 
 - node:
     pkg: sllidar_ros2
@@ -78,9 +85,32 @@ launch:
         value: false
     output: screen
 
-# Intel RealSense
+# # Intel RealSense
+# - include:
+#     file: "$(find-pkg-share realsense2_camera)/launch/rs_launch.py"
+#     # arg:
+#     #   - name: test_mode
+#     #     value: 'True'
+
+# Nav2
 - include:
-    file: "$(find-pkg-share realsense2_camera)/launch/rs_launch.py"
-    # arg:
-    #   - name: test_mode
-    #     value: 'True'
+    file: "$(find-pkg-share nav2_bringup)/launch/bringup_launch.py"
+    arg:
+      # - name: namespace
+      #   value: ''
+      # - name: use_namespace
+      #   value: False
+      # - name: slam
+      #   value: False
+      - name: map
+        value: "$(var map_file)"
+      - name: use_sim_time
+        value: 'False'
+      - name: params_file
+        value: "$(var nav_params_file)"
+      # - name: autostart
+      #   value:
+      - name: use_composition
+        value: 'False'
+      # - name: use_respawn
+      #   value: True
