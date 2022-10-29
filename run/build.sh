@@ -37,8 +37,14 @@ echo
 
 # This also assumes that the distro's setup.bash is called
 # in entrypoint.sh via .bashrc
-bash -c "colcon build --packages-up-to-regex realsense2 2>/dev/null"
+
+bash -c "colcon build --packages-select realsense2_camera realsense2_camera_msgs realsense2_description"
+
+# bash -c "colcon build --packages-select sllidar_ros2 --symlink-install"
+bash -c "colcon build --packages-select rplidar_ros --symlink-install"
+
 bash -c "colcon build --packages-select roboclaw_interfaces roboclaw_driver2"
-bash -c "colcon build --packages-select r2b2 r2b2_base sllidar_ros2 --symlink-install"
+
+bash -c "colcon build --packages-select r2b2 r2b2_base --symlink-install"
 
 echo
