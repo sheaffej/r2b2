@@ -1,0 +1,164 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+    <model name="west_wall">
+        <static>true</static>
+
+        <link name="west_wall">
+            <pose degrees="true">6.0 0 1.5 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>12.0 0.12 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="south_wall">
+            <pose degrees="true">0.0 -7.5 1.5 0 0 90</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>15.0 0.12 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="east_wall">
+            <pose degrees="true">6.0 -15 1.5 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>12.0 0.12 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="center_south_wall">
+            <pose degrees="true">2.75 -7.5 1.5 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>5.5 0.12 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="center_north_wall">
+            <pose degrees="true">9.5 -7.5 1.5 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>5.0 0.12 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="north_east_wall">
+            <pose degrees="true">12.0 -11.25 1.5 0 0 90</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>7.5 0.12 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="half_bath">
+            <pose degrees="true">10.0 -6.5 1.5 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>4.0 2.0 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="stairs_wall">
+            <pose degrees="true">10.0 -3.5 1.5 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>4.0 0.12 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="coat_closet">
+            <pose degrees="true">11.0 -4.5 1.5 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>2.0 2.0 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="lower_stairs">
+            <pose degrees="true">11.5 -1.75 1.5 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>1.0 3.5 3.0</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="kitchen_island">
+            <pose degrees="true">6.0 -12.5 0.75 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>1.0 5.0 1.5</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="kitchen_sink_counter">
+            <pose degrees="true">9.25 -14.5 0.75 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>5.5 1.0 1.5</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+        <link name="kitchen_range_counter">
+            <pose degrees="true">11.5.0 -12.5 0.75 0 0 0</pose>
+            <inertial><mass>1</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>1.0 5.0 1.5</size>
+                    </box>
+                </geometry>
+            </visual>
+        </link>
+
+
+    </model>
+</sdf>
