@@ -6,12 +6,14 @@
     <xacro:property name="wheel_width" value="0.025" />
     <xacro:property name="wheel_x_from_ctr" value="0.095" />
     <xacro:property name="wheel_y_from_ctr" value="0.0875" />
+    <xacro:property name="wheel_mass" value="0.040" />
+    <xacro:property name="wheel_max_velocity" value="${pi * 2 * (220 / 60)}" />  <!-- 220 RPM -->
 
     <xacro:property name="base_x_len" value="0.250" />
     <xacro:property name="base_y_width" value="0.200" />
     <xacro:property name="base_plate_ht" value="0.006" />
     <xacro:property name="base_standoff_ht" value="0.060" />
-    <xacro:property name="base_link_mass" value="2.285" />
+    <xacro:property name="base_link_mass" value="2.125" />
 
     <xacro:property name="motor_mount_ht" value="0.0145" />
     <xacro:property name="sensor_arch_ht" value="0.062" />
@@ -39,6 +41,7 @@
     <xacro:property name="base_box_top_ht" value="${base_box_ht_from_floor + base_box_ht}"/>
 
     <!-- Macros -->
+    <!-- https://en.wikipedia.org/wiki/List_of_moments_of_inertia#List_of_3D_inertia_tensors -->
     <xacro:macro name="box_inertial" params="mass length width height">
         <inertial>
             <mass value="${mass}" />
@@ -49,6 +52,20 @@
                 iyy="${1/12 * mass * (pow(width, 2) + pow(height, 2))}"
                 iyz="0"
                 izz="${1/12 * mass * (pow(width, 2) + pow(length, 2))}"
+            />
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="cylinder_inertial" params="mass radius height">
+        <inertial>
+            <mass value="${mass}" />
+            <inertia 
+                ixx="${1/12 * mass * (3 * pow(radius, 2) + pow(height, 2))}"
+                ixy="0"
+                ixz="0"
+                iyy="${1/12 * mass * (3 * pow(radius, 2) + pow(height, 2))}"
+                iyz="0"
+                izz="${1/12 * mass * pow(radius, 2)}"
             />
         </inertial>
     </xacro:macro>
@@ -67,10 +84,42 @@
         <child link="imu_link"/>
     </joint>
 
-    <joint name="scanner_link_join" type="fixed">
+    <joint name="scanner_link_joint" type="fixed">
         <origin xyz="0.080 0 0.228" rpy="0.0 0.0 3.14159"/>
         <parent link="base_link"/>
         <child link="scanner_link"/>
+    </joint>
+
+    <joint name="front_left_wheel_joint" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" velocity="${wheel_max_velocity}"/>    
+        <origin xyz="${wheel_x_from_ctr} ${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="front_left_wheel_link"/>
+    </joint>
+
+    <joint name="front_right_wheel_joint" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" velocity="${wheel_max_velocity}"/>    
+        <origin xyz="${wheel_x_from_ctr} -${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="front_right_wheel_link"/>
+    </joint>
+
+    <joint name="rear_left_wheel_joint" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" velocity="${wheel_max_velocity}"/>    
+        <origin xyz="-${wheel_x_from_ctr} ${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="rear_left_wheel_link"/>
+    </joint>
+
+    <joint name="rear_right_wheel_joint" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" velocity="${wheel_max_velocity}"/>    
+        <origin xyz="-${wheel_x_from_ctr} -${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="rear_right_wheel_link"/>
     </joint>
 
 
@@ -113,48 +162,6 @@
             </gazebo>
         </visual>
 
-        <!-- Wheels -->
-        <visual name="front_left_wheel">
-            <geometry>
-                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
-            </geometry>
-            <origin xyz="${wheel_x_from_ctr} ${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
-            <material name="Black" />
-            <gazebo reference="front_left_wheel">
-                <material>Gazebo/Black</material>
-            </gazebo>
-        </visual>
-        <visual name="front_right_wheel">
-            <geometry>
-                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
-            </geometry>
-            <origin xyz="${wheel_x_from_ctr} -${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
-            <material name="Black" />
-            <gazebo reference="front_right_wheel">
-                <material>Gazebo/Black</material>
-            </gazebo>
-        </visual>
-        <visual name="rear_left_wheel">
-            <geometry>
-                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
-            </geometry>
-            <origin xyz="-${wheel_x_from_ctr} ${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
-            <material name="Black" />
-            <gazebo reference="rear_left_wheel">
-                <material>Gazebo/Black</material>
-            </gazebo>
-        </visual>
-        <visual name="rear_right_wheel">
-            <geometry>
-                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
-            </geometry>
-            <origin xyz="-${wheel_x_from_ctr} -${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
-            <material name="Black" />
-            <gazebo reference="rear_right_wheel">
-                <material>Gazebo/Black</material>
-            </gazebo>
-        </visual>
-
         <collision>
             <geometry>
                 <box size="${base_x_len} ${base_y_width} ${base_box_ht}"/>
@@ -164,19 +171,99 @@
         <xacro:box_inertial 
             mass="${base_link_mass}" length="${base_x_len}" 
             width="${base_y_width}" height="${base_box_ht}" />
-
     </link>
+
+
+    <!-- Wheels -->
+    <link name="front_left_wheel_link">
+
+        <visual name="front_left_wheel">
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+            <material name="Black" />
+            <gazebo reference="front_left_wheel">
+                <material>Gazebo/Black</material>
+            </gazebo>
+        </visual>
+
+        <collision>
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+        </collision>
+
+        <xacro:cylinder_inertial mass="${wheel_mass}" radius="${wheel_dia/2}" height="${wheel_width}"/>
+    </link>
+
+    <link name="front_right_wheel_link">
+        <visual name="front_right_wheel">
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+            <material name="Black" />
+            <gazebo reference="front_right_wheel">
+                <material>Gazebo/Black</material>
+            </gazebo>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+        </collision>
+
+        <xacro:cylinder_inertial mass="${wheel_mass}" radius="${wheel_dia/2}" height="${wheel_width}"/>
+    </link>
+
+    <link name="rear_left_wheel_link">
+        <visual name="rear_left_wheel">
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+            <material name="Black" />
+            <gazebo reference="rear_left_wheel">
+                <material>Gazebo/Black</material>
+            </gazebo>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+        </collision>
+
+        <xacro:cylinder_inertial mass="${wheel_mass}" radius="${wheel_dia/2}" height="${wheel_width}"/>
+    </link>
+
+    <link name="rear_right_wheel_link">
+        <visual name="rear_right_wheel">
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+            <material name="Black" />
+            <gazebo reference="rear_right_wheel">
+                <material>Gazebo/Black</material>
+            </gazebo>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
+            </geometry>
+        </collision>
+
+        <xacro:cylinder_inertial mass="${wheel_mass}" radius="${wheel_dia/2}" height="${wheel_width}"/>
+    </link>
+
 
     <link name="camera_link">
         <visual>
-        <geometry>
-            <box size="${camera_length}, ${camera_width} ${camera_height}"/>
-        </geometry>
-        <material name="Sky Blue" />
-        <gazebo reference="camera_link">
-            <material>Gazebo/Blue</material>
-        </gazebo>
-    </visual>
+            <geometry>
+                <box size="${camera_length}, ${camera_width} ${camera_height}"/>
+            </geometry>
+            <material name="Sky Blue" />
+            <gazebo reference="camera_link">
+                <material>Gazebo/Blue</material>
+            </gazebo>
+        </visual>
 
         <xacro:box_inertial 
             mass="${camera_mass}" length="${camera_length}" 
