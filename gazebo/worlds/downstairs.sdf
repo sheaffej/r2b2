@@ -1,23 +1,21 @@
 <?xml version="1.0" ?>
-<sdf version="1.8">
+<sdf version="1.10">
     <world name="downstairs">
-
         <physics name="1ms" type="ignored">
             <max_step_size>0.001</max_step_size>
             <real_time_factor>1.0</real_time_factor>
         </physics>
-        
         <plugin
-            filename="libignition-gazebo-physics-system.so"
-            name="ignition::gazebo::systems::Physics">
+            filename="libgz-sim-physics-system.so"
+            name="gz::sim::systems::Physics">
         </plugin>
         <plugin
-            filename="libignition-gazebo-user-commands-system.so"
-            name="ignition::gazebo::systems::UserCommands">
+            filename="libgz-sim-user-commands-system.so"
+            name="gz::sim::systems::UserCommands">
         </plugin>
         <plugin
-            filename="libignition-gazebo-scene-broadcaster-system.so"
-            name="ignition::gazebo::systems::SceneBroadcaster">
+            filename="libgz-sim-scene-broadcaster-system.so"
+            name="gz::sim::systems::SceneBroadcaster">
         </plugin>
 
         <light type="directional" name="sun">
@@ -38,28 +36,27 @@
             <static>true</static>
             <link name="link">
                 <collision name="collision">
-                    <geometry>
-                        <plane>
-                            <normal>0 0 1</normal>
-                        </plane>
-                    </geometry>
+                <geometry>
+                    <plane>
+                    <normal>0 0 1</normal>
+                    </plane>
+                </geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry>
-                        <plane>
-                            <normal>0 0 1</normal>
-                            <size>100 100</size>
-                        </plane>
-                    </geometry>
-                    <material>
-                        <ambient>0.8 0.8 0.8 1</ambient>
-                        <diffuse>0.8 0.8 0.8 1</diffuse>
-                        <specular>0.8 0.8 0.8 1</specular>
-                    </material>
+                <geometry>
+                    <plane>
+                    <normal>0 0 1</normal>
+                    <size>100 100</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <ambient>0.8 0.8 0.8 1</ambient>
+                    <diffuse>0.8 0.8 0.8 1</diffuse>
+                    <specular>0.8 0.8 0.8 1</specular>
+                </material>
                 </visual>
             </link>
         </model>
-
 
         <!-- <model name='walls'>
             <static>true</static>      
@@ -89,6 +86,19 @@
         <model name='r2b2_model'>
             <include><uri>file://../../config/urdf/r2b2.urdf</uri></include>
             <pose>2 -1 0 0 0 0</pose>
+            <plugin
+                filename="libignition-gazebo-diff-drive-system.so"
+                name="ignition::gazebo::systems::DiffDrive">
+                <!-- https://gazebosim.org/api/gazebo/4.5/classignition_1_1gazebo_1_1systems_1_1DiffDrive.html#details -->
+                <left_joint>front_left_wheel_joint</left_joint>
+                <left_joint>rear_left_wheel_joint</left_joint>
+                <right_joint>front_right_wheel_joint</right_joint>
+                <right_joint>rear_right_wheel_joint</right_joint>
+                <wheel_separation>0.175</wheel_separation>
+                <wheel_radius>0.016</wheel_radius>
+                <odom_publish_frequency>1</odom_publish_frequency>
+                <topic>cmd_vel</topic>
+            </plugin>
 
         </model>
 

@@ -11,6 +11,7 @@ xacro ${MYDIR}/../../config/urdf/r2b2.xacro > /tmp/r2b2.urdf
 # --reqtype ignition.msgs.Entity --reptype ignition.msgs.Boolean --timeout 1000 \
 # --req 'id: 163'
 
-ign service -s /world/downstairs/create \
---reqtype ignition.msgs.EntityFactory --reptype ignition.msgs.Boolean --timeout 1000 \
+# ign service -s /world/downstairs/create \
+gz service -s /world/downstairs/create \
+--reqtype gz.msgs.EntityFactory --reptype gz.msgs.Boolean --timeout 1000 \
 --req 'sdf_filename: "/tmp/r2b2.urdf", name: "r2b2_model", pose: {position: {x: 2 y: -1}}'
