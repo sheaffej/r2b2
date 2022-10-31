@@ -18,6 +18,11 @@
     <xacro:property name="motor_mount_ht" value="0.0145" />
     <xacro:property name="sensor_arch_ht" value="0.062" />
 
+    <!-- NUC8i5BEK 4.60" x 4.40" x 1.41" (117 mm x 112 mm x 36 mm) -->
+    <xacro:property name="nuc_length" value="0.117" />
+    <xacro:property name="nuc_width" value="0.112" />
+    <xacro:property name="nuc_height" value="0.036" />
+
     <xacro:property name="camera_length" value="0.025" />
     <xacro:property name="camera_width" value="0.090" />
     <xacro:property name="camera_height" value="0.025" />
@@ -33,12 +38,11 @@
     <xacro:property name="imu_height" value="0.003" />
     <xacro:property name="imu_mass" value="0.0007" />
 
-
-
     <!-- Derived Measurements -->
     <xacro:property name="base_box_ht" value="${base_plate_ht + base_standoff_ht + base_plate_ht}" />
     <xacro:property name="base_box_ht_from_floor" value="${wheel_dia/2 + motor_mount_ht}"/>
     <xacro:property name="base_box_top_ht" value="${base_box_ht_from_floor + base_box_ht}"/>
+    <xacro:property name="base_cg_height" value="${base_box_ht_from_floor + (base_box_ht + nuc_height)/2}" />
 
     <!-- Macros -->
     <!-- https://en.wikipedia.org/wiki/List_of_moments_of_inertia#List_of_3D_inertia_tensors -->
@@ -70,60 +74,11 @@
         </inertial>
     </xacro:macro>
 
-    <!-- Joints -->
-    <joint name="camera_link_joint" type="fixed">
-        <origin xyz="0.143 0.0 0.185" rpy="0.0 0.0 0.0"/>
-        <parent link="base_link"/>
-        <child link="camera_link"/>
-    </joint>
-
-    <joint name="imu_link_joint" type="fixed">
-        <origin xyz="0.040 -0.040 ${base_box_top_ht + sensor_arch_ht + 0.008}" 
-                rpy="0.0 0.0 0.0"/>
-        <parent link="base_link"/>
-        <child link="imu_link"/>
-    </joint>
-
-    <joint name="scanner_link_joint" type="fixed">
-        <origin xyz="0.080 0 0.228" rpy="0.0 0.0 3.14159"/>
-        <parent link="base_link"/>
-        <child link="scanner_link"/>
-    </joint>
-
-    <joint name="front_left_wheel_joint" type="revolute">
-        <axis xyz="1 0 0"/>
-        <limit effort="1000.0" velocity="${wheel_max_velocity}"/>    
-        <origin xyz="${wheel_x_from_ctr} ${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
-        <parent link="base_link"/>
-        <child link="front_left_wheel_link"/>
-    </joint>
-
-    <joint name="front_right_wheel_joint" type="revolute">
-        <axis xyz="1 0 0"/>
-        <limit effort="1000.0" velocity="${wheel_max_velocity}"/>    
-        <origin xyz="${wheel_x_from_ctr} -${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
-        <parent link="base_link"/>
-        <child link="front_right_wheel_link"/>
-    </joint>
-
-    <joint name="rear_left_wheel_joint" type="revolute">
-        <axis xyz="1 0 0"/>
-        <limit effort="1000.0" velocity="${wheel_max_velocity}"/>    
-        <origin xyz="-${wheel_x_from_ctr} ${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
-        <parent link="base_link"/>
-        <child link="rear_left_wheel_link"/>
-    </joint>
-
-    <joint name="rear_right_wheel_joint" type="revolute">
-        <axis xyz="1 0 0"/>
-        <limit effort="1000.0" velocity="${wheel_max_velocity}"/>    
-        <origin xyz="-${wheel_x_from_ctr} -${wheel_y_from_ctr} ${wheel_dia/2}" rpy="${pi/2} 0.0 0.0"/>
-        <parent link="base_link"/>
-        <child link="rear_right_wheel_link"/>
-    </joint>
 
 
     <!-- Links -->
+    <link name="base_footprint"/>
+
     <link name="base_link">
 
         <visual name="frame_box">
@@ -131,7 +86,7 @@
             <geometry>
                 <box size="${base_x_len} ${base_y_width} ${base_box_ht}" />
             </geometry>
-            <origin xyz="0.0 0.0 ${base_box_ht_from_floor + base_box_ht/2}"/>
+            <origin xyz="0.0 0.0 ${base_box_ht_from_floor + base_box_ht/2 - base_cg_height}"/>
             <material name="White" />
             <gazebo reference="frame_box">
                 <material>Gazebo/White</material>
@@ -141,10 +96,9 @@
         <visual name="nuc">
             <!-- Top of NUC is 156mm from origin -->
             <geometry>
-                <!-- NUC8i5BEK 4.60" x 4.40" x 1.41" (117 mm x 112 mm x 36 mm) -->
-                <box size="0.117 0.112 0.036"/>
+                <box size="${nuc_length} ${nuc_width} ${nuc_height}"/>
             </geometry>
-            <origin xyz="-0.0335 0.0 ${base_box_top_ht + 0.036/2}"/>
+            <origin xyz="-0.0335 0.0 ${base_box_top_ht + 0.036/2 - base_cg_height}"/>
             <material name="White" />
             <gazebo reference="nuc">
                 <material>Gazebo/White</material>
@@ -155,7 +109,7 @@
             <geometry>
                 <box size="0.070 0.094 0.030"/>
             </geometry>
-            <origin xyz="0.077 0.0 ${base_box_top_ht + 0.030/2}"/>
+            <origin xyz="0.077 0.0 ${base_box_top_ht + 0.030/2 - base_cg_height}"/>
             <material name="White" />
             <gazebo reference="raspberry_pi4">
                 <material>Gazebo/White</material>
@@ -164,7 +118,7 @@
 
         <collision>
             <geometry>
-                <box size="${base_x_len} ${base_y_width} ${base_box_ht}"/>
+                <box size="${base_x_len} ${base_y_width} ${base_box_top_ht + nuc_height}"/>
             </geometry>
         </collision>
 
@@ -176,7 +130,6 @@
 
     <!-- Wheels -->
     <link name="front_left_wheel_link">
-
         <visual name="front_left_wheel">
             <geometry>
                 <cylinder radius="${wheel_dia/2}" length="${wheel_width}"/>
@@ -268,7 +221,6 @@
         <xacro:box_inertial 
             mass="${camera_mass}" length="${camera_length}" 
             width="${camera_width}" height="${camera_height}" />
-
     </link>
 
     <link name="imu_link">
@@ -285,8 +237,7 @@
         <xacro:box_inertial 
             mass="${imu_mass}" length="${imu_length}" 
             width="${imu_width}" height="${imu_height}" />
-
-    </link>
+    </link> 
 
     <link name="scanner_link">        
         <visual>
@@ -316,8 +267,65 @@
         <xacro:box_inertial 
             mass="${scanner_mass}" length="${scanner_box_length}" 
             width="${scanner_box_width}" height="${scanner_box_height}" />
-
     </link>
+
+
+    <!-- Joints -->
+
+    <joint name="base_link_joint" type="fixed">
+        <origin xyz="0 0 ${base_cg_height}" rpy="0 0 0" />
+        <parent link="base_footprint" />
+        <child link="base_link" />
+    </joint>
+
+    <joint name="camera_link_joint" type="fixed">
+        <origin xyz="0.143 0.0 ${0.185 - base_cg_height}" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="camera_link"/>
+    </joint>
+
+    <joint name="imu_link_joint" type="fixed">
+        <origin xyz="0.040 -0.040 ${base_box_top_ht + sensor_arch_ht + 0.008 - base_cg_height}" 
+                rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="imu_link"/>
+    </joint>
+
+    <joint name="scanner_link_joint" type="fixed">
+        <origin xyz="0.080 0 ${0.228 - base_cg_height}" rpy="0.0 0.0 3.14159"/>
+        <parent link="base_link"/>
+        <child link="scanner_link"/>
+    </joint>
+
+    <joint name="front_left_wheel_joint" type="continuous">
+        <axis xyz="0 0 1"/>
+        <origin xyz="${wheel_x_from_ctr} ${wheel_y_from_ctr} -${wheel_dia/2+0.1}" rpy="-${pi/2} 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="front_left_wheel_link"/>
+    </joint>
+
+    <joint name="front_right_wheel_joint" type="continuous">
+        <axis xyz="0 0 1"/>
+        <origin xyz="${wheel_x_from_ctr} -${wheel_y_from_ctr} -${wheel_dia/2+0.1}" rpy="-${pi/2} 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="front_right_wheel_link"/>
+    </joint>
+
+    <joint name="rear_left_wheel_joint" type="continuous">
+        <axis xyz="0 0 1"/>
+        <origin xyz="-${wheel_x_from_ctr} ${wheel_y_from_ctr} -${wheel_dia/2+0.1}" rpy="-${pi/2} 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="rear_left_wheel_link"/>
+    </joint>
+
+    <joint name="rear_right_wheel_joint" type="continuous">
+        <axis xyz="0 0 1"/>
+        <origin xyz="-${wheel_x_from_ctr} -${wheel_y_from_ctr} -${wheel_dia/2+0.1}" rpy="-${pi/2} 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="rear_right_wheel_link"/>
+    </joint>
+
+
 
     <!-- Materials -->
     <material name="Black">
