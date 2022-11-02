@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<sdf version="1.8" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:property name="wall_height" value="3.0"/>
+    <xacro:property name="wall_width" value="0.120"/>
+
+    <xacro:macro name="basic_wall" params="name length width height center_x center_y deg_yaw">
+        <link name="${name}">
+            <pose degrees="true">${center_x} ${center_y} ${height/2} 0.0 0.0 ${deg_yaw}</pose>
+            <inertial><mass>1000</mass></inertial>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>${length} ${width} ${height}</size>
+                    </box>
+                </geometry>
+            </visual>
+
+            <collision name="${name}_collision">
+                <geometry>
+                  <box>
+                    <size>${length} ${width} ${height}</size>
+                </box>
+                </geometry>
+              </collision>
+        </link>
+    </xacro:macro>
+
+
+    <model name="west_wall">
+        <static>true</static>
+
+        <xacro:basic_wall name="west_wall" length="12.0" width="${wall_width}" height="${wall_height}" center_x="6.0" center_y="0.0" deg_yaw="0.0" />
+        <xacro:basic_wall name="south_wall" length="15.0" width="${wall_width}" height="${wall_height}" center_x="0.0" center_y="-7.5" deg_yaw="90.0" />
+        <xacro:basic_wall name="east_wall" length="12.0" width="${wall_width}" height="${wall_height}" center_x="6.0" center_y="-15.0" deg_yaw="0.0" />
+        <xacro:basic_wall name="center_south_wall" length="5.5" width="${wall_width}" height="${wall_height}" center_x="2.75" center_y="-7.5" deg_yaw="0.0" />
+        <xacro:basic_wall name="center_north_wall" length="5.0" width="${wall_width}" height="${wall_height}" center_x="9.5" center_y="-7.5" deg_yaw="0.0" />
+        <xacro:basic_wall name="north_east_wall" length="7.5" width="${wall_width}" height="${wall_height}" center_x="12.0" center_y="-11.25" deg_yaw="90.0" />
+        <xacro:basic_wall name="half_bath" length="4.0" width="2.0" center_x="10.0" height="${wall_height}" center_y="-6.5" deg_yaw="0.0" />
+        <xacro:basic_wall name="stairs_wall" length="4.0" width="${wall_width}" height="${wall_height}" center_x="10.0" center_y="-3.5" deg_yaw="0.0" />
+        <xacro:basic_wall name="coat_closet" length="2.0" width="2.0" center_x="11.0" height="${wall_height}" center_y="-4.5" deg_yaw="0.0" />
+        <xacro:basic_wall name="lower_stairs" length="1.0" width="3.5" center_x="11.5" height="${wall_height}" center_y="-1.75" deg_yaw="0.0" />
+        <xacro:basic_wall name="kitchen_island" length="1.0" width="5.0" height="1.5" center_x="6.0" center_y="-12.5" deg_yaw="0.0" />
+        <xacro:basic_wall name="kitchen_sink_counter" length="5.5" width="1.0" height="1.5" center_x="9.25" center_y="-14.5" deg_yaw="0.0" />
+        <xacro:basic_wall name="kitchen_range_counter" length="1.0" width="5.0" height="1.5" center_x="11.5" center_y="-12.5" deg_yaw="0.0" />
+
+    </model>
+</sdf>

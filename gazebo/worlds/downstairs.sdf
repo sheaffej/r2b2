@@ -20,7 +20,7 @@
 
         <light type="directional" name="sun">
             <cast_shadows>true</cast_shadows>
-            <pose>0 0 10 0 0 0</pose>
+            <pose>0 0 100 0 0 0</pose>
             <diffuse>0.8 0.8 0.8 1</diffuse>
             <specular>0.2 0.2 0.2 1</specular>
             <attenuation>
@@ -58,7 +58,7 @@
             </link>
         </model>
 
-        <!-- <model name='walls'>
+        <model name='walls'>
             <static>true</static>      
             <include>
                 <uri>file://../models/walls.sdf</uri>
@@ -80,11 +80,11 @@
                 <uri>model://Sofa</uri>
             </include>
             <pose>0.9403 -5.9575 -0.0417 0 0 0</pose>
-	    </model> -->
+	    </model>
 
 
             <include><uri>file://../../config/urdf/r2b2.urdf</uri>
-                <pose relative_to="world">0 0 1 0 0 0</pose>
+                <pose relative_to="world">1 -1 0 0 0 0</pose>
                 <plugin filename="libgz-sim-diff-drive-system.so"
                         name="gz::sim::systems::DiffDrive">                
                     <!-- https://gazebosim.org/api/gazebo/4.5/classignition_1_1gazebo_1_1systems_1_1DiffDrive.html#details -->
