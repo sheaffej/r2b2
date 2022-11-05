@@ -6,16 +6,21 @@
             <real_time_factor>1.0</real_time_factor>
         </physics>
         <plugin
-            filename="libgz-sim-physics-system.so"
+            filename="gz-sim-physics-system"
             name="gz::sim::systems::Physics">
         </plugin>
         <plugin
-            filename="libgz-sim-user-commands-system.so"
+            filename="gz-sim-user-commands-system"
             name="gz::sim::systems::UserCommands">
         </plugin>
         <plugin
-            filename="libgz-sim-scene-broadcaster-system.so"
+            filename="gz-sim-scene-broadcaster-system"
             name="gz::sim::systems::SceneBroadcaster">
+        </plugin>
+        <plugin
+            filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+            <render_engine>ogre2</render_engine>
         </plugin>
 
         <light type="directional" name="sun">
@@ -83,21 +88,21 @@
 	    </model>
 
 
-            <include><uri>file://../../config/urdf/r2b2.urdf</uri>
-                <pose relative_to="world">1 -1 0 0 0 0</pose>
-                <plugin filename="libgz-sim-diff-drive-system.so"
-                        name="gz::sim::systems::DiffDrive">                
-                    <!-- https://gazebosim.org/api/gazebo/4.5/classignition_1_1gazebo_1_1systems_1_1DiffDrive.html#details -->
-                    <left_joint>front_left_wheel_joint</left_joint>
-                    <left_joint>rear_left_wheel_joint</left_joint>
-                    <right_joint>front_right_wheel_joint</right_joint>
-                    <right_joint>rear_right_wheel_joint</right_joint>
-                    <wheel_separation>0.175</wheel_separation>
-                    <wheel_radius>0.016</wheel_radius>
-                    <odom_publish_frequency>1</odom_publish_frequency>
-                    <topic>cmd_vel</topic>
-                </plugin>                
-            </include>
-
+        <include><uri>file://../../config/urdf/r2b2.urdf</uri>
+            <pose relative_to="world">1 -1 0 0 0 0</pose>
+            <plugin filename="libgz-sim-diff-drive-system.so"
+                    name="gz::sim::systems::DiffDrive">                
+                <!-- https://gazebosim.org/api/gazebo/4.5/classignition_1_1gazebo_1_1systems_1_1DiffDrive.html#details -->
+                <left_joint>front_left_wheel_joint</left_joint>
+                <left_joint>rear_left_wheel_joint</left_joint>
+                <right_joint>front_right_wheel_joint</right_joint>
+                <right_joint>rear_right_wheel_joint</right_joint>
+                <wheel_separation>0.175</wheel_separation>
+                <wheel_radius>0.016</wheel_radius>
+                <odom_publish_frequency>1</odom_publish_frequency>
+                <topic>cmd_vel</topic>
+            </plugin>                    
+        </include>
+            
     </world>
 </sdf>
