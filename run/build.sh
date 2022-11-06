@@ -26,7 +26,7 @@ if [[ ! -f ${HOME}/.apt-rosdep-updated ]]; then
 else
     echo "Skipping apt and rosdep update as it was previously run."
 fi
-rosdep install --from-paths src -y -i --skip-keys=librealsense2
+rosdep install --from-paths src -y -i --skip-keys="librealsense2 gz-sim7 gz-transport12 gz-math7 gz-msgs9"
 
 
 echo

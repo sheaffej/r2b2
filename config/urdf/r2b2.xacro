@@ -142,7 +142,7 @@
     <link name="camera_link">
         <visual>
             <geometry>
-                <box size="${camera_length}, ${camera_width} ${camera_height}"/>
+                <box size="${camera_length} ${camera_width} ${camera_height}"/>
             </geometry>
             <material name="Sky Blue" />
             <gazebo reference="camera_link">
@@ -152,7 +152,7 @@
 
         <collision>
             <geometry>
-                <box size="${camera_length}, ${camera_width} ${camera_height}"/>
+                <box size="${camera_length} ${camera_width} ${camera_height}"/>
             </geometry>
         </collision>
 
@@ -185,14 +185,14 @@
     </link> 
 
     <link name="scanner_link">
-        <!-- Note: Scanner link's origin needs to be where the receive sensor is located, near the top -->
+        <!-- Note Scanner link's origin needs to be where the receive sensor is located, near the top -->
         <visual name="scanner_cylinder_visual">
             <geometry>
                 <cylinder radius="${scanner_cylinder_dia/2}" length="${scanner_cylinder_height}"/>
             </geometry>
             <!--
                 Rotating cylinder is 24.5mm tall
-                Receive sensor origin is 15.5mm above bottom of cylinder:
+                Receive sensor origin is 15.5mm above bottom of cylinder
                     i.e. scanner_sensor_height - (scanner_height - scanner_cylinder_height)
                 So the cylinder visual should be dropped by the difference
                     y = (24.5/2) - 15.5 = -3.25mm
@@ -211,13 +211,13 @@
             <!--
                 Calculate the visual origin of the base box which sits under the cylinder.
 
-                X:
+                X-
                 Align the front edge. So just translate by the difference on one side
                 Which = (Xscanner - Xcylinder)/2 since the difference is on each side
 
-                Y: No change since the scanner is in the center of base
+                Y- No change since the scanner is in the center of base
 
-                Z: 
+                Z- 
                 This is the simplified expression of the longer calculation
                 -(Hbox/2 + (Hcylinder - (Hscanner - Hsensor)))
                 Where Hbox = Hscanner - Hcylinder
@@ -413,9 +413,9 @@
     </gazebo>
 
     <gazebo reference="scanner_link">
-        <sensor name='gpu_lidar' type='gpu_lidar'>
+        <sensor name='rplidar_a1' type='gpu_lidar'>
             <pose relative_to="scanner_link">0 0 0 0 0 0</pose>
-            <topic>lidar</topic>
+            <topic>scan</topic>
             <update_rate>10</update_rate>
             <lidar>
                 <scan>

@@ -5,7 +5,7 @@ CONTAINER_NAME="r2b2-robot-it"
 LABEL="r2b2"
 
 # MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-PROJ_DIR=/home/b2/r2b2_project
+PROJ_DIR=${HOME}/r2b2_project
 DOWNLOADS_DIR=~/Downloads
 CODE_MOUNT="/workspaces"
 

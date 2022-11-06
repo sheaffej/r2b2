@@ -62,7 +62,7 @@ RUN apt-get update && \
         usbutils && \
     mkdir -p ${ROS_WS}/src && \
     cd ${ROS_WS}/src && \
-    git clone https://github.com/IntelRealSense/realsense-ros.git -b ros2-beta && \
+    git clone https://github.com/IntelRealSense/realsense-ros.git -b ros2-development && \
     wget -q https://github.com/mengyui/librealsense2-dkms/releases/download/initial-support-for-kernel-5.15/librealsense2-dkms-dkms_1.3.14_amd64.deb && \
     wget -q https://github.com/mengyui/librealsense2-dkms/releases/download/initial-support-for-kernel-5.15/libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb && \
     wget -q https://github.com/mengyui/librealsense2-dkms/releases/download/initial-support-for-kernel-5.15/PREBUILT-DEB-PACKAGE-librealsense2_2.50.0-0.realsense0.6128_amd64.zip && \

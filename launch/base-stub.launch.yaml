@@ -1,7 +1,9 @@
 launch:
 
 - include:
-    file: "$(dirname)/base.launch.yaml"
+    file: "$(dirname)/r2b2.launch.py"
     arg:
       - name: test_mode
         value: 'True'
+      - name: run_nav
+        value: 'False'
