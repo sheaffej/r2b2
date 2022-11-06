@@ -15,6 +15,7 @@ pushd ${ROS_WS}
 
 if [[ $1 == 'clean' ]]; then
     rm -Rf install build logs
+    # unset AMENT_PREFIX_PATH CMAKE_PREFIX_PATH
 fi
 
 if [[ ! -f ${HOME}/.apt-rosdep-updated ]]; then
@@ -46,5 +47,18 @@ bash -c "colcon build --packages-select rplidar_ros --symlink-install"
 bash -c "colcon build --packages-select roboclaw_interfaces roboclaw_driver2"
 
 bash -c "colcon build --packages-select r2b2 r2b2_base --symlink-install"
+
+
+echo
+echo "Soft linking r2b2 files:"
+for d in launch config gazebo; do
+    TARGET="${ROS_WS}/install/r2b2/share/r2b2/${d}"
+    if [[ ! -e ${TARGET} ]]; then
+        echo "  ${TARGET}"
+        ln -s ${ROS_WS}/src/r2b2/${d} ${TARGET}
+    else
+        echo "  ${TARGET} [exists]"
+    fi
+done
 
 echo

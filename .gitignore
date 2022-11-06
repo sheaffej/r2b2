@@ -2,3 +2,4 @@
 notes.txt
 config/urdf/r2b2.urdf
 gazebo/models/walls.sdf
+__pycache__
