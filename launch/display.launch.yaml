@@ -2,10 +2,10 @@ launch:
 
 - arg:
     name: "rqtconfig"
-    default: "$(env HOME)/r2b2_project/r2b2/hosts/ros2-dev/config/main.perspective"
+    default: "$(find-pkg-share r2b2)/config/devtools/main.perspective"
 - arg:
     name: "rvizconfig"
-    default: "$(env HOME)/r2b2_project/r2b2/hosts/ros2-dev/config/config.rviz"
+    default: "$(find-pkg-share r2b2)/config/devtools/config.rviz"
 
 - node:
     pkg: rqt_gui
