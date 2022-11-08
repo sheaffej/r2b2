@@ -48,6 +48,9 @@ bash -c "colcon build --packages-select roboclaw_interfaces roboclaw_driver2"
 
 bash -c "colcon build --packages-select r2b2 r2b2_base --symlink-install"
 
+if [[ -d "${ROS_WS}/src/ros_gz" ]]; then
+    bash -c "colcon build --packages-select-regex ros_gz --allow-overriding ros_gz_bridge ros_gz_image ros_gz_interfaces ros_gz_sim ros_gz_sim_demos"
+fi
 
 echo
 echo "Soft linking r2b2 files:"

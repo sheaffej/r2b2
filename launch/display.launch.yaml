@@ -6,15 +6,24 @@ launch:
 - arg:
     name: "rvizconfig"
     default: "$(find-pkg-share r2b2)/config/devtools/config.rviz"
+- arg:
+    name: "use_sim_time"
+    default: 'false'
 
 - node:
     pkg: rqt_gui
     exec: rqt_gui
     name: rtq_gui  
     args: "--perspective-file $(var rqtconfig)"
+    param:
+      - name: use_sim_time
+        value: $(var use_sim_time)
 
-- node:
-    pkg: rviz2
-    exec: rviz2
-    name: rviz2
-    args: "-d $(var rvizconfig)"
+# - node:
+#     pkg: rviz2
+#     exec: rviz2
+#     name: rviz2
+#     args: "-d $(var rvizconfig)"
+#     param:
+#       - name: use_sim_time
+#         value: $(var use_sim_time)
