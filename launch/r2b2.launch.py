@@ -134,7 +134,7 @@ def generate_launch_description():
     actions.append(
         IncludeLaunchDescription(
             condition=LaunchConfigurationEquals('run_nav', 'true'),
-            launch_description_source=[FindPackageShare('nav2_bringup'), '/launch/bringup_launch.py'],
+            launch_description_source=[LaunchConfiguration('ros_ws'), '/src/r2b2/launch/nav2/bringup_launch.py'],
             launch_arguments={
                 #   'namespace': '',
                 #   'use_namespace': 'false'
@@ -144,7 +144,7 @@ def generate_launch_description():
                 # 'use_sim_time': 'true',
                 'params_file': LaunchConfiguration('nav_params_file'),
                 #   'autostart':
-                # 'use_composition': 'false',
+                # 'use_composition': 'False',
                 #   'use_respawn': 'true'
             }.items()
         )
