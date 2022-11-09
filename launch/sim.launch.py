@@ -5,8 +5,8 @@ from launch.actions import (
 )
 from launch.conditions import LaunchConfigurationEquals
 from launch.events import Shutdown
-from launch.event_handlers import OnShutdown, OnProcessExit, OnProcessStart
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.event_handlers import OnProcessExit, OnProcessStart
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node, SetParameter
 
 

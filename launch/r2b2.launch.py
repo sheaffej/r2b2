@@ -1,8 +1,7 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo, GroupAction
 from launch.conditions import LaunchConfigurationEquals
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
+from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.parameter_descriptions import ParameterValue
@@ -114,18 +113,6 @@ def generate_launch_description():
                 'robot_description': ParameterValue(
                     Command(['xacro', ' ', LaunchConfiguration('robot_model_file')]),
                     value_type=str),
-                # 'use_sim_time': LaunchConfiguration('sim_mode'),
-            }]
-        )
-    )
-
-    actions.append(
-        Node(
-            name='joint_state_publisher',
-            package='joint_state_publisher',
-            executable='joint_state_publisher',
-            parameters=[{
-                'use_gui': False,
                 # 'use_sim_time': LaunchConfiguration('sim_mode'),
             }]
         )
