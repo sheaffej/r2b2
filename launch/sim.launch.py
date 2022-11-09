@@ -6,7 +6,7 @@ from launch.actions import (
 from launch.conditions import LaunchConfigurationEquals
 from launch.events import Shutdown
 from launch.event_handlers import OnShutdown, OnProcessExit, OnProcessStart
-from launch.substitutions import LaunchConfiguration, LocalSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node, SetParameter
 
 
@@ -61,8 +61,27 @@ def generate_launch_description():
 
     actions.append(SetParameter("use_sim_time", True))
 
+    # -------------------
+    # Convert xacro files
+    # -------------------
+    exec_xacro_r2b2 = ExecuteProcess(
+        cmd=['xacro ', (LaunchConfiguration('ros_ws'), '/src/r2b2/config/urdf/r2b2.xacro'), ' > /tmp/r2b2.urdf'],
+        shell=True
+    )
+    actions.append(exec_xacro_r2b2)
+
+    exec_xacro_walls = ExecuteProcess(
+        cmd=['xacro ', (LaunchConfiguration('ros_ws'), '/src/r2b2/gazebo/models/walls.xacro'), ' > /tmp/walls.sdf'],
+        shell=True
+    )
+    actions.append(
+        RegisterEventHandler(
+            OnProcessStart(target_action=exec_xacro_r2b2, on_start=[exec_xacro_walls])
+        )
+    )
+
     # ----------
-    # Gazebo Sim
+    # Run Gazebo
     # ----------
     exec_gazebo = ExecuteProcess(
         cmd=[
@@ -74,7 +93,9 @@ def generate_launch_description():
     )
     actions.append(exec_gazebo)
 
+    # -------------
     # ROS GZ Bridge
+    # -------------
     node_gz_bridge = Node(
         name='ros_gz_bridge',
         package='ros_gz_bridge',
@@ -105,14 +126,8 @@ def generate_launch_description():
     include_display = IncludeLaunchDescription(
         condition=LaunchConfigurationEquals('run_display', 'true'),
         launch_description_source=[LaunchConfiguration('ros_ws'), '/src/r2b2/launch/display.launch.yaml'],
-        # launch_arguments=[
-        #     ('use_sim_time', 'true')
-        # ]
     )
 
-    # --------------
-    # Event handlers
-    # --------------
     actions.append(
         RegisterEventHandler(
             OnProcessStart(
@@ -126,6 +141,9 @@ def generate_launch_description():
         )
     )
 
+    # ------------------
+    # Handle Gazebo exit
+    # ------------------
     actions.append(
         RegisterEventHandler(
             OnProcessExit(

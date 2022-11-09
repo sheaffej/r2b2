@@ -66,7 +66,7 @@
         <model name='walls'>
             <static>true</static>      
             <include>
-                <uri>file://../models/walls.sdf</uri>
+                <uri>file:///tmp/walls.sdf</uri>
             </include>
             <pose>0 0 0 0 0 0</pose>
 	    </model>
@@ -88,7 +88,7 @@
 	    </model>
 
 
-        <include><uri>file://../../config/urdf/r2b2.urdf</uri>
+        <include><uri>file:///tmp/r2b2.urdf</uri>
             <pose relative_to="world">1 -1 0 0 0 0</pose>
             <plugin filename="libgz-sim-diff-drive-system.so"
                     name="gz::sim::systems::DiffDrive">                
