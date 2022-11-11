@@ -222,7 +222,7 @@
                 -(Hbox/2 + (Hcylinder - (Hscanner - Hsensor)))
                 Where Hbox = Hscanner - Hcylinder
             -->
-            <origin xyz="${(scanner_length - scanner_cylinder_dia)/2} 0.0 ${ -(scanner_cylinder_height - scanner_height + (2 * scanner_sensor_height)) / 2 }" />
+            <origin xyz="${-(scanner_length - scanner_cylinder_dia)/2} 0.0 ${ -(scanner_cylinder_height - scanner_height + (2 * scanner_sensor_height)) / 2 }" />
             <material name="Black" />
             <gazebo reference="scanner_box_visual">
                 <material>Gazebo/Black</material>
@@ -346,7 +346,7 @@
     </joint>
 
     <joint name="scanner_link_joint" type="fixed">
-        <origin xyz="0.080 0 ${0.228 - base_cg_height}" rpy="0.0 0.0 3.14159"/>
+        <origin xyz="0.080 0 ${0.228 - base_cg_height}" rpy="0.0 0.0 0.0"/>
         <parent link="base_link"/>
         <child link="scanner_link"/>
     </joint>
@@ -414,29 +414,39 @@
 
     <gazebo reference="scanner_link">
         <sensor name='rplidar_a1' type='gpu_lidar'>
+            <!-- 10Hz @ 4000 points = 400 samples and 10 update rate -->
             <pose relative_to="scanner_link">0 0 0 0 0 0</pose>
             <topic>scan</topic>
             <update_rate>10</update_rate>
             <lidar>
                 <scan>
-                <horizontal>
-                    <samples>640</samples>
-                    <resolution>1</resolution>
-                    <min_angle>-1.396263</min_angle>
-                    <max_angle>1.396263</max_angle>
-                </horizontal>
-                <vertical>
-                    <samples>16</samples>
-                    <resolution>1</resolution>
-                    <min_angle>-0.261799</min_angle>
-                    <max_angle>0.261799</max_angle>
-                </vertical>
-                </scan>
+                    <horizontal>
+                        <samples>400</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-${pi}</min_angle>
+                        <max_angle>${pi}</max_angle>
+                    </horizontal>
+                    <vertical>
+                        <!-- <samples>16</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-0.261799</min_angle>
+                        <max_angle>0.261799</max_angle> -->
+                        <samples>3</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-0.261799</min_angle>
+                        <max_angle>0.261799</max_angle>
+                    </vertical>
+                    </scan>
                 <range>
-                <min>0.08</min>
-                <max>10.0</max>
-                <resolution>0.01</resolution>
+                    <min>0.15</min>
+                    <max>12.0</max>
+                    <resolution>0.01</resolution>
                 </range>
+                <noise>
+                    <type>guassian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
             </lidar>
             <always_on>true</always_on>
             <visualize>true</visualize>

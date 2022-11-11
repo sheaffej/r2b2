@@ -13,6 +13,8 @@ from launch_ros.actions import Node, SetParameter
 def generate_launch_description():
     actions = []
 
+    actions.append(DeclareLaunchArgument('run_display', default_value='True'))
+
     actions.append(DeclareLaunchArgument('ros_ws', default_value='/ros2'))
 
     actions.append(DeclareLaunchArgument('world_file',
@@ -31,34 +33,37 @@ def generate_launch_description():
         default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/gazebo/config/gz_bridge.params.yaml'])
     )
 
-    actions.append(DeclareLaunchArgument('run_ros_nodes', default_value='true'))
-    actions.append(DeclareLaunchArgument('run_display', default_value='true'))
-
+    actions.append(LogInfo(msg=['Arg: run_display = ', LaunchConfiguration('run_display')]))
     actions.append(LogInfo(msg=['Arg: ros_ws = ', LaunchConfiguration('ros_ws')]))
     actions.append(LogInfo(msg=['Arg: world_file = ', LaunchConfiguration('world_file')]))
     actions.append(LogInfo(msg=['Arg: models_path = ', LaunchConfiguration('models_path')]))
     actions.append(LogInfo(msg=['Arg: gui_config = ', LaunchConfiguration('gui_config')]))
     actions.append(LogInfo(msg=['Arg: gz_bridge_config_file = ', LaunchConfiguration('gz_bridge_config_file')]))
-    actions.append(LogInfo(msg=['Arg: run_ros_nodes = ', LaunchConfiguration('run_ros_nodes')]))
-    actions.append(LogInfo(msg=['Arg: run_display = ', LaunchConfiguration('run_display')]))
 
     # ------------------------
     # Args from r2b2.launch.py
     # ------------------------
+    actions.append(DeclareLaunchArgument('run_nav', default_value='True'))
+    actions.append(DeclareLaunchArgument('slam', default_value='False'))
+    actions.append(DeclareLaunchArgument('run_core_nodes', default_value='True',
+        description='Run non-hardware, non-nav nodes (e.g. robot_state_publisher)')
+    )
+
     actions.append(DeclareLaunchArgument('robot_model_file',
         default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/urdf/r2b2.xacro'])
     )
-
-    actions.append(DeclareLaunchArgument('run_nav', default_value='true'))
 
     actions.append(DeclareLaunchArgument('nav_params_file',
         default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/params/nav2_params.yaml'])
     )
 
     actions.append(DeclareLaunchArgument('map_file',
-        default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/map/b2-downstairs4.yaml'])
+        default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/map/gz_map.yaml'])
     )
 
+    # ------------
+    # Use sim time
+    # ------------
     actions.append(SetParameter("use_sim_time", True))
 
     # -------------------
@@ -109,14 +114,16 @@ def generate_launch_description():
     # R2B2 in sim mode
     # ----------------
     include_r2b2 = IncludeLaunchDescription(
-        condition=LaunchConfigurationEquals('run_ros_nodes', 'true'),
         launch_description_source=[LaunchConfiguration('ros_ws'), '/src/r2b2/launch/r2b2.launch.py'],
         launch_arguments=[
-            ('sim_mode', 'true'),
+            ('ros_ws', LaunchConfiguration('ros_ws')),
+            ('sim_mode', 'True'),
             ('robot_model_file', LaunchConfiguration('robot_model_file')),
             ('run_nav', LaunchConfiguration('run_nav')),
             ('nav_params_file', LaunchConfiguration('nav_params_file')),
-            ('map_file', LaunchConfiguration('map_file'))
+            ('map_file', LaunchConfiguration('map_file')),
+            ('slam', LaunchConfiguration('slam')),
+            ('run_core_nodes', LaunchConfiguration('run_core_nodes'))
         ]
     )
 
@@ -124,7 +131,7 @@ def generate_launch_description():
     # Rviz and RQT
     # ------------
     include_display = IncludeLaunchDescription(
-        condition=LaunchConfigurationEquals('run_display', 'true'),
+        condition=LaunchConfigurationEquals('run_display', 'True'),
         launch_description_source=[LaunchConfiguration('ros_ws'), '/src/r2b2/launch/display.launch.yaml'],
     )
 
@@ -135,7 +142,7 @@ def generate_launch_description():
                 on_start=[
                     node_gz_bridge,
                     TimerAction(period=2.0, actions=[include_r2b2]),
-                    TimerAction(period=2.0, actions=[include_display])
+                    TimerAction(period=5.0, actions=[include_display])
                 ]
             )
         )
