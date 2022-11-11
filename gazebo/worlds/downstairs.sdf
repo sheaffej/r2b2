@@ -84,7 +84,67 @@
             <include>
                 <uri>model://Sofa</uri>
             </include>
-            <pose>0.9403 -5.9575 -0.0417 0 0 0</pose>
+            <pose>3.75 -6.903220 -0.0417 0 0 1.570796</pose>
+	    </model>
+        <model name='sofa_2'>
+            <static>true</static>      
+            <include>
+                <uri>model://Sofa</uri>
+            </include>
+            <pose>1.75 -6.903220 -0.0417 0 0 1.570796</pose>
+	    </model>
+        <model name='sofa_3'>
+            <static>true</static>      
+            <include>
+                <uri>model://Sofa</uri>
+            </include>
+            <pose>5.055830 -3.227570 -0.0417 0 0 3.14159</pose>
+	    </model>
+        <model name='sofa_4'>
+            <static>true</static>      
+            <include>
+                <uri>model://Sofa</uri>
+            </include>
+            <pose>2.775540 -8.140260 -0.0417 0 0 -1.570796</pose>
+	    </model>
+
+
+
+        <model name='desk1'>
+            <static>true</static>      
+            <include>
+                <uri>model://Desk</uri>
+            </include>
+            <pose>1.7750 -14.6484 0.0587 0 0 1.570796</pose>
+	    </model>
+        <model name='desk2'>
+            <static>true</static>      
+            <include>
+                <uri>model://Desk</uri>
+            </include>
+            <pose>2.7750 -14.6484 0.0587 0 0 1.570796</pose>
+	    </model>
+        <model name='desk3'>
+            <static>true</static>      
+            <include>
+                <uri>model://Desk</uri>
+            </include>
+            <pose>3.7750 -14.6484 0.0587 0 0 1.570796</pose>
+	    </model>
+
+        <model name='tv_stand'>
+            <static>true</static>      
+            <include>
+                <uri>model://TVStand</uri>
+            </include>
+            <pose>3.536030 -0.368994 0.0587 0 0 0</pose>
+	    </model>
+        <model name='monitor'>
+            <static>true</static>      
+            <include>
+                <uri>model://MonitorAndKeyboard</uri>
+            </include>
+            <pose>3.536030 -0.3 0.509502 0 0 1.570796</pose>
 	    </model>
 
 
