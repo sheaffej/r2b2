@@ -1,7 +1,7 @@
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, LogInfo, RegisterEventHandler,
-    EmitEvent, TimerAction
+    EmitEvent, TimerAction, GroupAction
 )
 from launch.conditions import LaunchConfigurationEquals
 from launch.events import Shutdown
@@ -13,7 +13,13 @@ from launch_ros.actions import Node, SetParameter
 def generate_launch_description():
     actions = []
 
+    actions.append(DeclareLaunchArgument('run_sim', default_value='True'))
+    actions.append(DeclareLaunchArgument('run_core_nodes', default_value='True',
+        description='Run non-hardware, non-nav nodes (e.g. robot_state_publisher)')
+    )
+    actions.append(DeclareLaunchArgument('run_nav', default_value='True'))
     actions.append(DeclareLaunchArgument('run_display', default_value='True'))
+    actions.append(DeclareLaunchArgument('slam', default_value='False'))
 
     actions.append(DeclareLaunchArgument('ros_ws', default_value='/ros2'))
 
@@ -33,22 +39,6 @@ def generate_launch_description():
         default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/gazebo/config/gz_bridge.params.yaml'])
     )
 
-    actions.append(LogInfo(msg=['Arg: run_display = ', LaunchConfiguration('run_display')]))
-    actions.append(LogInfo(msg=['Arg: ros_ws = ', LaunchConfiguration('ros_ws')]))
-    actions.append(LogInfo(msg=['Arg: world_file = ', LaunchConfiguration('world_file')]))
-    actions.append(LogInfo(msg=['Arg: models_path = ', LaunchConfiguration('models_path')]))
-    actions.append(LogInfo(msg=['Arg: gui_config = ', LaunchConfiguration('gui_config')]))
-    actions.append(LogInfo(msg=['Arg: gz_bridge_config_file = ', LaunchConfiguration('gz_bridge_config_file')]))
-
-    # ------------------------
-    # Args from r2b2.launch.py
-    # ------------------------
-    actions.append(DeclareLaunchArgument('run_nav', default_value='True'))
-    actions.append(DeclareLaunchArgument('slam', default_value='False'))
-    actions.append(DeclareLaunchArgument('run_core_nodes', default_value='True',
-        description='Run non-hardware, non-nav nodes (e.g. robot_state_publisher)')
-    )
-
     actions.append(DeclareLaunchArgument('robot_model_file',
         default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/urdf/r2b2.xacro'])
     )
@@ -60,6 +50,14 @@ def generate_launch_description():
     actions.append(DeclareLaunchArgument('map_file',
         default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/map/gz_map.yaml'])
     )
+
+    actions.append(LogInfo(msg=['Arg: run_display = ', LaunchConfiguration('run_display')]))
+    actions.append(LogInfo(msg=['Arg: ros_ws = ', LaunchConfiguration('ros_ws')]))
+    actions.append(LogInfo(msg=['Arg: world_file = ', LaunchConfiguration('world_file')]))
+    actions.append(LogInfo(msg=['Arg: models_path = ', LaunchConfiguration('models_path')]))
+    actions.append(LogInfo(msg=['Arg: gui_config = ', LaunchConfiguration('gui_config')]))
+    actions.append(LogInfo(msg=['Arg: gz_bridge_config_file = ', LaunchConfiguration('gz_bridge_config_file')]))
+
 
     # ------------
     # Use sim time
@@ -80,15 +78,17 @@ def generate_launch_description():
         shell=True
     )
     actions.append(
-        RegisterEventHandler(
-            OnProcessStart(target_action=exec_xacro_r2b2, on_start=[exec_xacro_walls])
-        )
+        # RegisterEventHandler(
+        #     OnProcessStart(target_action=exec_xacro_r2b2, on_start=[exec_xacro_walls])
+        # )
+        exec_xacro_walls
     )
 
     # ----------
     # Run Gazebo
     # ----------
     exec_gazebo = ExecuteProcess(
+        # condition=LaunchConfigurationEquals('run_sim', 'True'),
         cmd=[
             'gz sim --render-engine ogre -r ',
             '--gui-config ', LaunchConfiguration('gui_config'),
@@ -96,7 +96,6 @@ def generate_launch_description():
         additional_env={'GZ_SIM_RESOURCE_PATH': LaunchConfiguration('models_path')},
         shell=True
     )
-    actions.append(exec_gazebo)
 
     # -------------
     # ROS GZ Bridge
@@ -110,22 +109,33 @@ def generate_launch_description():
         }]
     )
 
+    group_sim = GroupAction(
+        condition=LaunchConfigurationEquals('run_sim', 'True'),
+        actions=[
+            exec_gazebo,
+            node_gz_bridge
+        ]
+    )
+    actions.append(TimerAction(period=1.0, actions=[group_sim]))
+
     # ----------------
     # R2B2 in sim mode
     # ----------------
     include_r2b2 = IncludeLaunchDescription(
         launch_description_source=[LaunchConfiguration('ros_ws'), '/src/r2b2/launch/r2b2.launch.py'],
         launch_arguments=[
+            ('run_core_nodes', LaunchConfiguration('run_core_nodes')),
+            ('run_nav', LaunchConfiguration('run_nav')),
             ('ros_ws', LaunchConfiguration('ros_ws')),
             ('sim_mode', 'True'),
             ('robot_model_file', LaunchConfiguration('robot_model_file')),
-            ('run_nav', LaunchConfiguration('run_nav')),
             ('nav_params_file', LaunchConfiguration('nav_params_file')),
             ('map_file', LaunchConfiguration('map_file')),
-            ('slam', LaunchConfiguration('slam')),
-            ('run_core_nodes', LaunchConfiguration('run_core_nodes'))
+            ('slam', LaunchConfiguration('slam'))
         ]
     )
+    actions.append(TimerAction(period=10.0, actions=[include_r2b2]))
+
 
     # ------------
     # Rviz and RQT
@@ -134,18 +144,8 @@ def generate_launch_description():
         condition=LaunchConfigurationEquals('run_display', 'True'),
         launch_description_source=[LaunchConfiguration('ros_ws'), '/src/r2b2/launch/display.launch.yaml'],
     )
-
     actions.append(
-        RegisterEventHandler(
-            OnProcessStart(
-                target_action=exec_gazebo,
-                on_start=[
-                    node_gz_bridge,
-                    TimerAction(period=2.0, actions=[include_r2b2]),
-                    TimerAction(period=5.0, actions=[include_display])
-                ]
-            )
-        )
+        TimerAction(period=2.0, actions=[include_display])
     )
 
     # ------------------

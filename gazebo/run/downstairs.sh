@@ -7,7 +7,7 @@ GZ_DIR="${MYDIR}/.."
 
 export GZ_SIM_RESOURCE_PATH="${MYDIR}/../models"
 
-xacro ${MYDIR}/../../config/urdf/r2b2.xacro > ${MYDIR}/../../config/urdf/r2b2.urdf
-xacro ${MYDIR}/../models/walls.xacro > ${MYDIR}/../models/walls.sdf
+xacro ${MYDIR}/../../config/urdf/r2b2.xacro > /tmp/r2b2.urdf
+xacro ${MYDIR}/../models/walls.xacro > /tmp/walls.sdf
 
 gz sim --render-engine ogre --gui-config ${GZ_DIR}/config/gui.config ${GZ_DIR}/worlds/${WORLD_SDF}

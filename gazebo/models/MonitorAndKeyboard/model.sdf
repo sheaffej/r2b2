@@ -16,13 +16,16 @@
       </visual>
 
       <collision name="collision_monitor">
+        <pose>-0.04 0.0 0.30 0 0 1.570795</pose>
         <geometry>
-          <mesh>
+          <!-- <mesh>
             <uri>model://MonitorAndKeyboard/meshes/monitor.obj</uri>
             <scale>0.20 0.20 0.20</scale>
-          </mesh>
+          </mesh> -->
+          <box>
+            <size>0.8 0.2 0.6</size>
+          </box>
         </geometry>
-        <pose>0 0 0 0 0 0</pose>
       </collision>
 
       <visual name="visual_keyboard">
@@ -36,16 +39,18 @@
       </visual>
 
       <collision name="collision_keyboard">
+        <pose>-0.27 0 0.04 0 0 1.570795</pose>
         <geometry>
-          <mesh>
+          <!-- <mesh>
             <uri>model://MonitorAndKeyboard/meshes/keyboard.obj</uri>
             <scale>0.20 0.20 0.20</scale>
-          </mesh>
+          </mesh> -->
+          <box>
+            <size>0.6 0.25 0.08</size>
+          </box>
         </geometry>
-        <pose>-0.27 0 0 0 0 0</pose>
       </collision>
 
     </link>
   </model>
 </sdf>
-

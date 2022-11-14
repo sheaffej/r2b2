@@ -11,8 +11,12 @@
         </visual>
 
         <collision name="collision">
+            <pose>0.0 0.0 0.47 0 0 0</pose>
           <geometry>
-            <mesh><uri>model://Sofa/meshes/Sofa.obj</uri></mesh>
+            <!-- <mesh><uri>model://Sofa/meshes/Sofa.obj</uri></mesh> -->
+            <box>
+                <size>1.813 1.08 0.94</size>
+            </box>
           </geometry>
         </collision>
 

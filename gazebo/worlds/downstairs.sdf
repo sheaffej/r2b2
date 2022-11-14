@@ -1,10 +1,11 @@
 <?xml version="1.0" ?>
-<sdf version="1.10">
+<sdf version="1.9">
     <world name="downstairs">
         <physics name="1ms" type="ignored">
             <max_step_size>0.001</max_step_size>
             <real_time_factor>1.0</real_time_factor>
         </physics>
+
         <plugin
             filename="gz-sim-physics-system"
             name="gz::sim::systems::Physics">
@@ -63,96 +64,85 @@
             </link>
         </model>
 
-        <model name='walls'>
+        <include>
+            <name>walls</name>
             <static>true</static>      
-            <include>
-                <uri>file:///tmp/walls.sdf</uri>
-            </include>
+            <uri>file:///tmp/walls.sdf</uri>
             <pose>0 0 0 0 0 0</pose>
-	    </model>
+        </include>
 
-        <model name='kitchen_table'>
+        <include>
+            <name>kitchen_table</name>
+            <uri>model://Table</uri>
             <static>true</static>      
-            <include>
-                <uri>model://Table</uri>
-            </include>
             <pose>2.7750 -11.9011 0.0587 0 0 0</pose>
-	    </model>
+        </include>
 
-        <model name='sofa_1'>
+        <include>
+            <name>sofa_1</name>
             <static>true</static>      
-            <include>
-                <uri>model://Sofa</uri>
-            </include>
+            <uri>model://Sofa</uri>
             <pose>3.75 -6.903220 -0.0417 0 0 1.570796</pose>
-	    </model>
-        <model name='sofa_2'>
+        </include>
+        <include>
+            <name>sofa_2</name>
             <static>true</static>      
-            <include>
-                <uri>model://Sofa</uri>
-            </include>
+            <uri>model://Sofa</uri>
             <pose>1.75 -6.903220 -0.0417 0 0 1.570796</pose>
-	    </model>
-        <model name='sofa_3'>
+        </include>
+        <include>
+            <name>sofa_3</name>
             <static>true</static>      
-            <include>
-                <uri>model://Sofa</uri>
-            </include>
+            <uri>model://Sofa</uri>
             <pose>5.055830 -3.227570 -0.0417 0 0 3.14159</pose>
-	    </model>
-        <model name='sofa_4'>
+        </include>
+        <include>
+            <name>sofa_4</name>
             <static>true</static>      
-            <include>
-                <uri>model://Sofa</uri>
-            </include>
+            <uri>model://Sofa</uri>
             <pose>2.775540 -8.140260 -0.0417 0 0 -1.570796</pose>
-	    </model>
+        </include>
 
-
-
-        <model name='desk1'>
+        <include>
+            <name>desk1</name>
             <static>true</static>      
-            <include>
-                <uri>model://Desk</uri>
-            </include>
+            <uri>model://Desk</uri>
             <pose>1.7750 -14.6484 0.0587 0 0 1.570796</pose>
-	    </model>
-        <model name='desk2'>
+        </include>
+        <include>
+            <name>desk2</name>
             <static>true</static>      
-            <include>
-                <uri>model://Desk</uri>
-            </include>
+            <uri>model://Desk</uri>
             <pose>2.7750 -14.6484 0.0587 0 0 1.570796</pose>
-	    </model>
-        <model name='desk3'>
+        </include>
+        <include>
+            <name>desk3</name>
             <static>true</static>      
-            <include>
-                <uri>model://Desk</uri>
-            </include>
+            <uri>model://Desk</uri>
             <pose>3.7750 -14.6484 0.0587 0 0 1.570796</pose>
-	    </model>
+        </include>
 
-        <model name='tv_stand'>
+        <include>
+            <name>tv_stand</name>
             <static>true</static>      
-            <include>
-                <uri>model://TVStand</uri>
-            </include>
+            <uri>model://TVStand</uri>
             <pose>3.536030 -0.368994 0.0587 0 0 0</pose>
-	    </model>
-        <model name='monitor'>
+        </include>
+
+        <include>
+            <name>monitor</name>
             <static>true</static>      
-            <include>
-                <uri>model://MonitorAndKeyboard</uri>
-            </include>
+            <uri>model://MonitorAndKeyboard</uri>
             <pose>3.536030 -0.3 0.509502 0 0 1.570796</pose>
-	    </model>
+        </include>
 
 
-        <include><uri>file:///tmp/r2b2.urdf</uri>
+        <!-- https://gazebosim.org/api/gazebo/4.5/classignition_1_1gazebo_1_1systems_1_1DiffDrive.html#details -->
+        <include>
+            <uri>file:///tmp/r2b2.urdf</uri>
             <pose relative_to="world">1 -1 0 0 0 0</pose>
             <plugin filename="libgz-sim-diff-drive-system.so"
                     name="gz::sim::systems::DiffDrive">                
-                <!-- https://gazebosim.org/api/gazebo/4.5/classignition_1_1gazebo_1_1systems_1_1DiffDrive.html#details -->
                 <left_joint>front_left_wheel_joint</left_joint>
                 <left_joint>rear_left_wheel_joint</left_joint>
                 <right_joint>front_right_wheel_joint</right_joint>
@@ -174,6 +164,10 @@
                     <joint_name>rear_right_wheel_joint</joint_name>
           </plugin>
         </include>
-            
+
+        
+
+
+
     </world>
 </sdf>
