@@ -44,7 +44,7 @@ def generate_launch_description():
     )
 
     actions.append(DeclareLaunchArgument('nav_params_file',
-        default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/params/nav2_params.yaml'])
+        default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/params/nav2_params.humble.yaml'])
     )
 
     actions.append(DeclareLaunchArgument('map_file',

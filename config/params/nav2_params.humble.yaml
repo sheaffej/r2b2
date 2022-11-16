@@ -1,49 +1,85 @@
 amcl:
   ros__parameters:
     use_sim_time: True
-    alpha1: 0.2
-    alpha2: 0.2
-    alpha3: 0.2
-    alpha4: 0.2
-    alpha5: 0.2
-    base_frame_id: "base_footprint"
-    beam_skip_distance: 0.5
-    beam_skip_error_threshold: 0.9
-    beam_skip_threshold: 0.3
-    do_beamskip: false
-    global_frame_id: "map"
-    lambda_short: 0.1
-    laser_likelihood_max_dist: 2.0
-    laser_max_range: 100.0
-    laser_min_range: -1.0
-    laser_model_type: "likelihood_field"
-    max_beams: 60
-    max_particles: 2000
-    min_particles: 500
-    odom_frame_id: "odom"
-    pf_err: 0.05
-    pf_z: 0.99
-    recovery_alpha_fast: 0.0
-    recovery_alpha_slow: 0.0
-    resample_interval: 1
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
-    save_pose_rate: 0.5
-    sigma_hit: 0.2
-    tf_broadcast: true
-    transform_tolerance: 1.0
-    update_min_a: 0.2
-    update_min_d: 0.25
-    z_hit: 0.5
-    z_max: 0.05
-    z_rand: 0.5
-    z_short: 0.05
+    base_frame_id: "base_footprint"
+    global_frame_id: "map"
     scan_topic: scan
+    odom_frame_id: "odom"
+    tf_broadcast: true
+    save_pose_rate: 0.5
+
     set_initial_pose: True
     initial_pose:
       x: 0.05
       y: 0.0
       z: 0.0
       yaw: 0.0
+
+    # =========================
+    # Odometry Model Parameters
+    # =========================
+    # https://answers.ros.org/question/227811/tuning-amcls-diff-corrected-and-omni-corrected-odom-models/
+    # https://github.com/ros-planning/navigation/blob/jade-devel/amcl/test/texas_willow_hallway_loop_corrected.xml
+
+    # Expected noise in odom's rotation estimate from the rotational component of the robot's motion
+    alpha1: 0.04    # texas willow: 0.04 (best: 0.04)
+
+    # Expected noise in odom's rotation estimate from translational component of the robot's motion
+    alpha2: 0.06    # texas willow: 0.6 (best: 0.06)
+
+    # Expected noise in odom's translation estimate from the translational component of the robot's motion
+    alpha3: 0.10    # texas willow: 0.3 (best: 0.10)
+
+    # Expected noise in odom's translation estimate from the rotational component of the robot's motion
+    alpha4: 0.005    # texax willow: 0.04 (best 0.005)
+
+    # Translation-related noise parameter (only used if model is "omni").
+    # alpha5: 0.2    # <--- default: 0.2
+
+    # =========================
+    # General Filter Parameters
+    # =========================
+    min_particles: 500    # default: 500
+    max_particles: 2000   # default: 2000
+    pf_err: 0.05          # default: 0.05, Particle Filter population error
+    pf_z: 0.99            # default: 0.99, Particle filter population density
+
+    # Rotational movement required before performing a filter update.
+    update_min_a: 0.08     # default: 0.2
+    # Translational movement required before performing a filter update
+    update_min_d: 0.05      # default: 0.25
+
+    resample_interval: 1        # default: 1, Number of filter updates required before resampling
+    transform_tolerance: 1.0    # default: 1.0 seconds
+    recovery_alpha_fast: 0.1    # default: 0.0
+    recovery_alpha_slow: 0.1    # default: 0.0
+
+    # ======================
+    # Laser Model Parameters
+    # ======================
+    laser_model_type: "likelihood_field"
+    laser_likelihood_max_dist: 2.0
+    max_beams: 1454     # default: 60, (b2 used 360)
+
+    # Laser scan range to be considered, -1.0 will cause the laser’s reported maximum range to be used.
+    laser_max_range: -1.0    # default: 100.0
+    laser_min_range: -1.0     # default: -1.0
+
+    # Mixture weight for z_X parts of model, sum of all used z weights must be 1.
+    # Beam uses all 4, likelihood model uses z_hit and z_rand.
+    z_hit: 0.5
+    z_max: 0.05
+    z_rand: 0.5
+    z_short: 0.05
+    sigma_hit: 0.2      # Standard deviation for Gaussian model used in z_hit part of the model.
+    lambda_short: 0.1   # Exponential decay parameter for z_short part of model.
+    
+    do_beamskip: false              # default: false, Whether to do beam skipping in Likelihood field model.
+    beam_skip_distance: 0.5         # default: 0.5, Ignore beams that most particles disagree with in Likelihood field model. Maximum distance to consider skipping for (m).
+    beam_skip_error_threshold: 0.9  # default: 0.9, Percentage of beams after not matching map to force full update due to bad convergance.
+    beam_skip_threshold: 0.3        # default: 0.3, Percentage of beams required to skip.
+
 
 bt_navigator:
   ros__parameters:
