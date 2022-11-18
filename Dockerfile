@@ -24,6 +24,7 @@ RUN apt-get update \
         ros-${ROS_DISTRO}-navigation2 \
         ros-${ROS_DISTRO}-nav2-bringup \
         ros-${ROS_DISTRO}-moveit \
+        ros-${ROS_DISTRO}-robot-localization \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 # ---------------------------

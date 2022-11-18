@@ -33,6 +33,11 @@ def generate_launch_description():
             default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/map/b2-downstairs4.yaml']
         )
     )
+    actions.append(
+        DeclareLaunchArgument('ekf_param_file',
+            default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/params/ekf.yaml']
+        )
+    )
 
     actions.append(LogInfo(msg=['Arg: test_mode = ', LaunchConfiguration('test_mode')]))
     actions.append(LogInfo(msg=['Arg: sim_mode = ', LaunchConfiguration('sim_mode')]))
@@ -69,11 +74,11 @@ def generate_launch_description():
                     parameters=[{
                         'loop_hz': 20,
                         'cmd_vel_topic': 'cmd_vel',
-                        'odom_topic': 'odom',
+                        'odom_topic': 'odometry/wheels',
                         'speed_command_topic': 'roboclaw/speed_command',
                         'roboclaw_front_stats_topic': 'roboclaw/stats',
                         'log_level': 'info',
-                        'publish_odom_tf': True
+                        'publish_odom_tf': False
                     }]
                 ),
 
@@ -98,6 +103,19 @@ def generate_launch_description():
                         'test_mode': 'True'
                     }.items()
                 ),
+            ]
+        )
+    )
+
+    actions.append(
+        Node(
+            package='robot_localization',
+            executable='ekf_node',
+            name='ekf_filter_node',
+            output='screen',
+            parameters=[
+                LaunchConfiguration('ekf_param_file')
+                # {'use_sim_time': use_sim_time}
             ]
         )
     )

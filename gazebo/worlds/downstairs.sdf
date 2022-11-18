@@ -151,10 +151,10 @@
                 <wheel_radius>0.032</wheel_radius>
                 <odom_publish_frequency>10</odom_publish_frequency>
                 <topic>cmd_vel</topic>
-                <odom_topic>odom</odom_topic>
+                <odom_topic>base_link/odom</odom_topic>
                 <frame_id>odom</frame_id>
                 <child_frame_id>base_footprint</child_frame_id>
-                <tf_topic>tf</tf_topic>
+                <!-- <tf_topic>tf</tf_topic> -->
             </plugin>
             <plugin filename="gz-sim-joint-state-publisher-system"
                     name="gz::sim::systems::JointStatePublisher">
@@ -162,7 +162,10 @@
                     <joint_name>front_right_wheel_joint</joint_name>
                     <joint_name>rear_left_wheel_joint</joint_name>
                     <joint_name>rear_right_wheel_joint</joint_name>
-          </plugin>
+            </plugin>
+            <plugin filename="libgz-sim-imu-system.so"
+                    name="gz::sim::systems::Imu">
+            </plugin>
         </include>
 
         

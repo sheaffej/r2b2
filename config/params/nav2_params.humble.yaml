@@ -1,10 +1,13 @@
+# ROS Navigation Tuning Guide, Kaiyu Zheng, September 2, 2016
+# https://kaiyuzheng.me/documents/papers/ros_navguide.pdf
+
 amcl:
   ros__parameters:
     use_sim_time: True
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
     base_frame_id: "base_footprint"
     global_frame_id: "map"
-    scan_topic: scan
+    scan_topic: /scan
     odom_frame_id: "odom"
     tf_broadcast: true
     save_pose_rate: 0.5
@@ -15,27 +18,6 @@ amcl:
       y: 0.0
       z: 0.0
       yaw: 0.0
-
-    # =========================
-    # Odometry Model Parameters
-    # =========================
-    # https://answers.ros.org/question/227811/tuning-amcls-diff-corrected-and-omni-corrected-odom-models/
-    # https://github.com/ros-planning/navigation/blob/jade-devel/amcl/test/texas_willow_hallway_loop_corrected.xml
-
-    # Expected noise in odom's rotation estimate from the rotational component of the robot's motion
-    alpha1: 0.04    # texas willow: 0.04 (best: 0.04)
-
-    # Expected noise in odom's rotation estimate from translational component of the robot's motion
-    alpha2: 0.06    # texas willow: 0.6 (best: 0.06)
-
-    # Expected noise in odom's translation estimate from the translational component of the robot's motion
-    alpha3: 0.10    # texas willow: 0.3 (best: 0.10)
-
-    # Expected noise in odom's translation estimate from the rotational component of the robot's motion
-    alpha4: 0.005    # texax willow: 0.04 (best 0.005)
-
-    # Translation-related noise parameter (only used if model is "omni").
-    # alpha5: 0.2    # <--- default: 0.2
 
     # =========================
     # General Filter Parameters
@@ -54,6 +36,28 @@ amcl:
     transform_tolerance: 1.0    # default: 1.0 seconds
     recovery_alpha_fast: 0.1    # default: 0.0
     recovery_alpha_slow: 0.1    # default: 0.0
+
+    # =========================
+    # Odometry Model Parameters
+    # =========================
+    # https://answers.ros.org/question/227811/tuning-amcls-diff-corrected-and-omni-corrected-odom-models/
+    # https://github.com/ros-planning/navigation/blob/jade-devel/amcl/test/texas_willow_hallway_loop_corrected.xml
+
+    # Expected noise in odom's rotation estimate from the rotational component of the robot's motion
+    alpha1: 2.0    # default: 0.2, B2: texas willow: 0.04 (best: 0.04)
+
+    # Expected noise in odom's rotation estimate from translational component of the robot's motion
+    alpha2: 0.06    # default: 0.2, B2: texas willow: 0.6 (best: 0.06)
+
+    # Expected noise in odom's translation estimate from the translational component of the robot's motion
+    alpha3: 0.4    # default: 0.2, B2: texas willow: 0.3 (best: 0.10)
+
+    # Expected noise in odom's translation estimate from the rotational component of the robot's motion
+    alpha4: 0.06    # default: 0.2, B2:texas willow: 0.04 (best 0.005)
+
+    # Translation-related noise parameter (only used if model is "omni").
+    # alpha5: 0.2    # default: 0.2
+
 
     # ======================
     # Laser Model Parameters
@@ -86,7 +90,7 @@ bt_navigator:
     use_sim_time: True
     global_frame: map
     robot_base_frame: base_footprint
-    odom_topic: /odom
+    odom_topic: /odometry/filtered
     bt_loop_duration: 10
     default_server_timeout: 20
     # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
@@ -384,7 +388,7 @@ velocity_smoother:
     min_velocity: [-0.26, 0.0, -1.0]
     max_accel: [2.5, 0.0, 3.2]
     max_decel: [-2.5, 0.0, -3.2]
-    odom_topic: "odom"
+    odom_topic: /odometry/filtered
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
