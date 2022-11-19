@@ -1,0 +1,30 @@
+launch:
+
+- arg:
+    name: ros_ws
+    default: "/ros2"
+- arg:
+    name: run_sim
+    default: 'True'
+- arg:
+    name: run_core_nodes
+    default: 'True'
+- arg:
+    name: run_nav
+    default: 'True'
+- arg:
+    name: run_display
+    default: 'False'
+
+
+- include:
+    file: "$(var ros_ws)/src/r2b2/launch/sim.launch.py"
+    arg:
+      - name: run_sim
+        value: $(var run_sim)
+      - name: run_core_nodes
+        value: $(var run_core_nodes)
+      - name: run_nav
+        value: $(var run_nav)
+      - name: run_display
+        value: $(var run_display)

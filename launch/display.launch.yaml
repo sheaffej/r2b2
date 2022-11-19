@@ -1,14 +1,17 @@
 launch:
 
 - arg:
+    name: ros_ws
+    default: "/ros2"
+- arg:
     name: "rqtconfig"
-    default: "$(find-pkg-share r2b2)/config/devtools/main.perspective"
+    default: "$(var ros_ws)/src/r2b2/config/devtools/main.perspective"
 - arg:
     name: "rvizconfig"
-    default: "$(find-pkg-share r2b2)/config/devtools/config.rviz"
+    default: "$(var ros_ws)/src/r2b2/config/devtools/config.rviz"
 - arg:
     name: "use_sim_time"
-    default: 'False'
+    default: 'True'
 
 - node:
     pkg: rqt_gui
