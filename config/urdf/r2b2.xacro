@@ -333,7 +333,7 @@
     </joint>
 
     <joint name="camera_link_joint" type="fixed">
-        <origin xyz="0.143 0.0 ${0.185 - base_cg_height}" rpy="0.0 0.0 0.0"/>
+        <origin xyz="0.143 0.0 ${0.185 - base_cg_height}" rpy="0.0 0.3491 0.0"/>
         <parent link="base_link"/>
         <child link="camera_link"/>
     </joint>
@@ -455,65 +455,156 @@
     </gazebo>
 
     <gazebo reference="camera_link">
-        <!-- <sensor name="realsense_d435_depth" type="depth_camera">
-            <topic>depth_camera</topic>
-            <update_rate>10</update_rate>
+        <sensor name="rgbd_camera" type="rgbd_camera">
+            <topic>rgbd_camera</topic>
+            <update_rate>30</update_rate>
+            <camera>
+                <horizontal_fov>1.2133529</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <distortion>
+                    <k1>0</k1>
+                    <k2>0</k2>
+                    <k3>0</k3>
+                    <p1>0</p1>
+                    <p2>0</p2>
+                    <center>0.5 0.5</center>
+                </distortion>
+                <lens>
+                    <type>sterographic</type>
+                    <scale_to_hfov>true</scale_to_hfov>
+                    <intrinsics>
+                        <fx>461.115600585938</fx>
+                        <fy>461.144226074219</fy>
+                        <cx>319.159820556641</cx>
+                        <cy>181.155624389648</cy>
+                        <s>0</s>
+                    </intrinsics>
+                </lens>
+                <clip>
+                    <near>0.1</near>
+                    <far>50</far>
+                </clip>
+            </camera>
             <depth_camera>
-              <horizontal_fov>1.05</horizontal_fov>
-              <image>
-                <width>256</width>
-                <height>256</height>
-                <format>R_FLOAT32</format>
-              </image>
-              <clip>
-                <near>0.1</near>
-                <far>10.0</far>
+                <output>depths</output>
+                <clip>
+                    <near>0.3</near>
+                    <far>3.0</far>
+                </clip>
+            </depth_camera>
+            <always_on>1</always_on>
+            <visualize>true</visualize>
+            <enable_metrics>true</enable_metrics>
+            <ignition_frame_id>camera_link</ignition_frame_id>
+          </sensor>
+
+        <!-- <sensor name="realsense_D435_rgb" type="camera">
+            <topic>realsense/color/image_raw</topic>
+            <update_rate>30</update_rate>
+            <camera>
+                <horizontal_fov>1.2133529</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>360</height>
+                    <format>R8G8B8</format>
+                </image>
+                <distortion>
+                    <k1>0</k1>
+                    <k2>0</k2>
+                    <k3>0</k3>
+                    <p1>0</p1>
+                    <p2>0</p2>
+                    <center>0.5 0.5</center>
+                </distortion>
+                <lens>
+                    <type>sterographic</type>
+                    <scale_to_hfov>true</scale_to_hfov>
+                    <intrinsics>
+                        <fx>461.115600585938</fx>
+                        <fy>461.144226074219</fy>
+                        <cx>319.159820556641</cx>
+                        <cy>181.155624389648</cy>
+                        <s>0</s>
+                    </intrinsics>
+                </lens>
+            </camera>
+            <always_on>1</always_on>
+            <visualize>true</visualize>
+            <ignition_frame_id>camera_link</ignition_frame_id>
+        </sensor> -->
+
+
+        <!-- Intrinsic of "Color" / 640x360 / {YUYV/RGB8/BGR8/RGBA8/BGRA8/Y16}
+        Width:      	640
+        Height:     	360
+        PPX:        	319.159820556641
+        PPY:        	181.155624389648
+        Fx:         	461.115600585938
+        Fy:         	461.144226074219
+        Distortion: 	Inverse Brown Conrady
+        Coeffs:     	0  	0  	0  	0  	0  
+        FOV (deg):  	69.52 x 42.64 -->
+      
+
+        <!-- <sensor name="realsense_D435_depth" type="depth_camera">
+            <topic>realsense/depth/image_rect_raw</topic>
+            <update_rate>6</update_rate>
+            <camera>
+                <horizontal_fov>1.5610225</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>360</height>
+                    <format>R_FLOAT32</format>
+                </image>
+                <distortion>
+                    <k1>0</k1>
+                    <k2>0</k2>
+                    <k3>0</k3>
+                    <p1>0</p1>
+                    <p2>0</p2>
+                    <center>0.5 0.5</center>
+                </distortion>
+                <lens>
+                    <type>sterographic</type>
+                    <scale_to_hfov>true</scale_to_hfov>
+                    <intrinsics>
+                        <fx>323.143859863281</fx>
+                        <fy>323.143859863281</fy>
+                        <cx>317.321014404297</cx>
+                        <cy>177.92724609375</cy>
+                        <s>0</s>
+                    </intrinsics>
+                </lens>
+
+            </camera>
+            <depth_camera>
+                <output>depths</output>
+                <clip>
+                <near>0.3</near>
+                <far>3.0</far>
               </clip>
-              <output>depths</output>
             </depth_camera>
             <always_on>1</always_on>
             <visualize>true</visualize>
             <ignition_frame_id>camera_link</ignition_frame_id>
         </sensor> -->
 
-        <!-- <sensor name="realsense_d435_rgb" type="camera">
-            <topic>rgb_camera</topic>
-            <update_rate>30</update_rate>
-            <camera>
-              <horizontal_fov>1.047</horizontal_fov>
-              <image>
-                <width>320</width>
-                <height>240</height>
-              </image>
-              <clip>
-                <near>0.1</near>
-                <far>100</far>
-              </clip>
-            </camera>
-            <always_on>1</always_on>
-            <visualize>true</visualize>
-            <ignition_frame_id>camera_link</ignition_frame_id>
-        </sensor>         -->
+        <!-- Intrinsic of "Depth" / 640x360 / {Z16}
+        Width:      	640
+        Height:     	360
+        PPX:        	317.321014404297
+        PPY:        	177.92724609375
+        Fx:         	323.143859863281
+        Fy:         	323.143859863281
+        Distortion: 	Brown Conrady
+        Coeffs:     	0  	0  	0  	0  	0  
+        FOV (deg):  	89.44 x 58.24 -->
 
-        <sensor name="rgbd_camera" type="rgbd_camera">
-            <topic>rgbd_camera</topic>
-            <update_rate>30</update_rate>
-            <camera>
-              <horizontal_fov>1.047</horizontal_fov>
-              <image>
-                <width>320</width>
-                <height>240</height>
-              </image>
-              <clip>
-                <near>0.1</near>
-                <far>100</far>
-              </clip>
-            </camera>
-            <always_on>1</always_on>
-            <visualize>true</visualize>
-            <enable_metrics>true</enable_metrics>
-            <ignition_frame_id>camera_link</ignition_frame_id>
-          </sensor>
+
     </gazebo>
 
     <gazebo reference="imu_link">

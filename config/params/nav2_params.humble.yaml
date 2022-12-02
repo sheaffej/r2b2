@@ -7,7 +7,7 @@ amcl:
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
     base_frame_id: "base_footprint"
     global_frame_id: "map"
-    scan_topic: /scan
+    scan_topic: /base/scan
     odom_frame_id: "odom"
     tf_broadcast: true
     save_pose_rate: 0.5
@@ -90,7 +90,7 @@ bt_navigator:
     use_sim_time: True
     global_frame: map
     robot_base_frame: base_footprint
-    odom_topic: /odometry/filtered
+    odom_topic: /base/odom/filtered
     bt_loop_duration: 10
     default_server_timeout: 20
     # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
@@ -253,7 +253,7 @@ local_costmap:
         mark_threshold: 0
         observation_sources: scan
         scan:
-          topic: /scan
+          topic: /base/scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -284,7 +284,7 @@ global_costmap:
         enabled: True
         observation_sources: scan
         scan:
-          topic: /scan
+          topic: /base/scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -388,7 +388,7 @@ velocity_smoother:
     min_velocity: [-0.26, 0.0, -1.57]
     max_accel: [2.5, 0.0, 3.2]
     max_decel: [-2.5, 0.0, -3.2]
-    odom_topic: /odometry/filtered
+    odom_topic: /base/odom/filtered
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
