@@ -1,3 +1,7 @@
 cli/
 .devcontainer
+.vscode
+.gitignore
+.dockerignore
 hosts/
+Dockerfile

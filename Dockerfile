@@ -1,4 +1,3 @@
-# FROM ros:galactic-ros-base
 FROM ros:humble-ros-base
 
 ENV ROS_WS /ros2
@@ -137,7 +136,24 @@ RUN git clone https://github.com/sheaffej/r2b2-base.git
 RUN git clone https://github.com/babakhani/rplidar_ros2
 
 
+# --------------------------------------
+# Build packages that don't change often
+# --------------------------------------
+RUN cd ${ROS_WS} \
+&& source "/opt/ros/$ROS_DISTRO/setup.bash" \
+&& rosdep install --from-paths src -y -i --skip-keys="librealsense2 gz-sim7 gz-transport12 gz-math7 gz-msgs9" \
+&& colcon build --packages-select realsense2_camera realsense2_camera_msgs realsense2_description \
+&& colcon build --packages-select rplidar_ros --symlink-install \
+&& colcon build --packages-select roboclaw_interfaces roboclaw_driver2
 
+
+# -----------------------
+# Add additional packages
+# -----------------------
+RUN apt-get update \
+&& apt-get install -y \
+    ros-${ROS_DISTRO}-vision-msgs \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 # ----------------
 # Add this package

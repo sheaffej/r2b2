@@ -100,7 +100,7 @@ def generate_launch_description():
                     condition=LaunchConfigurationEquals('test_mode', 'False'),
                     launch_description_source=[FindPackageShare('realsense2_camera'), '/launch/rs_launch.py'],
                     launch_arguments={
-                        'test_mode': 'True'
+                        'align_depth.enable': 'True'
                     }.items()
                 ),
             ]
@@ -116,6 +116,9 @@ def generate_launch_description():
             parameters=[
                 LaunchConfiguration('ekf_param_file')
                 # {'use_sim_time': use_sim_time}
+            ],
+            remappings=[
+                ('/odometry/filtered', '/base/odom/filtered')
             ]
         )
     )
