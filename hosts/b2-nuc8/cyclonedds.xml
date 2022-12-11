@@ -13,7 +13,7 @@
                 <Peer Address="localhost" />
                 <Peer Address="b2-nuc8.boltz" />
                 <Peer Address="ros2-compute.boltz" />
-                <Peer Address="old-cat.boltz" />
+                <Peer Address="jaguar.boltz" />
                 <Peer Address="lap-cat.boltz" />
                 <Peer Address="ros2-dev.boltz" />
             </Peers>
