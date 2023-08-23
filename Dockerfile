@@ -14,21 +14,18 @@ ENTRYPOINT ["/entrypoint.sh"]
 RUN apt-get update \
 	&& apt-get install -y \
         wget \
+        unzip \
         vim \
         less \
         python-is-python3 \
         python3-pip \
         software-properties-common \
-    # Add big ROS packages
-        ros-${ROS_DISTRO}-navigation2 \
-        ros-${ROS_DISTRO}-nav2-bringup \
-        ros-${ROS_DISTRO}-moveit \
-        ros-${ROS_DISTRO}-robot-localization \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 # ---------------------------
 # Install Intel librealsense2
 # ---------------------------
+# https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md
 
 # # ~~~~ Galactic ~~~~
 # RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE \
@@ -37,48 +34,87 @@ RUN apt-get update \
 # && apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev librealsense2-dbg \
 # && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
-# ~~~~ Humble ~~~~
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        ca-certificates \
-        wget \
-        dkms \
-        git \
-        libusb-1.0-0-dev \
-        libudev-dev \
-        libglfw3-dev \
-        pkg-config \
-        libgtk-3-dev \
-        at \
-        unzip \
-        libpopt0 \
-        rsync \
-        libglu1 \
-        libglu1-mesa \
-        python3-colcon-common-extensions \
-        python3-rosdep \
-        build-essential \
-        nano \
-        usbutils && \
-    mkdir -p ${ROS_WS}/src && \
-    cd ${ROS_WS}/src && \
-    git clone https://github.com/IntelRealSense/realsense-ros.git -b ros2-development && \
-    wget -q https://github.com/mengyui/librealsense2-dkms/releases/download/initial-support-for-kernel-5.15/librealsense2-dkms-dkms_1.3.14_amd64.deb && \
-    wget -q https://github.com/mengyui/librealsense2-dkms/releases/download/initial-support-for-kernel-5.15/libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb && \
-    wget -q https://github.com/mengyui/librealsense2-dkms/releases/download/initial-support-for-kernel-5.15/PREBUILT-DEB-PACKAGE-librealsense2_2.50.0-0.realsense0.6128_amd64.zip && \
-    unzip PREBUILT-DEB-PACKAGE-librealsense2_2.50.0-0.realsense0.6128_amd64.zip && \
-    dpkg -i librealsense2-dkms-dkms_1.3.14_amd64.deb && \
-    dpkg -i libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb && \
-    dpkg -i librealsense2-udev-rules_2.50.0-0~realsense0.6128_amd64.deb && \
-    dpkg -i librealsense2_2.50.0-0~realsense0.6128_amd64.deb && \
-    dpkg -i librealsense2-gl_2.50.0-0~realsense0.6128_amd64.deb && \
-    dpkg -i librealsense2-net_2.50.0-0~realsense0.6128_amd64.deb && \
-    dpkg -i librealsense2-utils_2.50.0-0~realsense0.6128_amd64.deb && \
-    dpkg -i librealsense2-dev_2.50.0-0~realsense0.6128_amd64.deb && \
-    rm -f *.deb *.zip && \
-    cd realsense-ros/realsense2_camera && \
-    sed -i 's/find_package(realsense2 2.51.1)/find_package(realsense2)/' CMakeLists.txt && \
-    rm -rf /var/lib/apt/lists/*
+# # ~~~~ Humble ~~~~
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends \
+#         ca-certificates \
+#         wget \
+#         dkms \
+#         git \
+#         libusb-1.0-0-dev \
+#         libudev-dev \
+#         libglfw3-dev \
+#         pkg-config \
+#         libgtk-3-dev \
+#         at \
+#         unzip \
+#         libpopt0 \
+#         rsync \
+#         libglu1 \
+#         libglu1-mesa \
+#         python3-colcon-common-extensions \
+#         python3-rosdep \
+#         build-essential \
+#         nano \
+#         usbutils && \
+#     mkdir -p ${ROS_WS}/src && \
+#     cd ${ROS_WS}/src && \
+#     git clone https://github.com/IntelRealSense/realsense-ros.git -b ros2-development && \
+#     wget -q https://github.com/mengyui/librealsense2-dkms/releases/download/initial-support-for-kernel-5.15/librealsense2-dkms-dkms_1.3.14_amd64.deb && \
+#     wget -q https://github.com/mengyui/librealsense2-dkms/releases/download/initial-support-for-kernel-5.15/libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb && \
+#     wget -q https://github.com/mengyui/librealsense2-dkms/releases/download/initial-support-for-kernel-5.15/PREBUILT-DEB-PACKAGE-librealsense2_2.50.0-0.realsense0.6128_amd64.zip && \
+#     unzip PREBUILT-DEB-PACKAGE-librealsense2_2.50.0-0.realsense0.6128_amd64.zip && \
+#     dpkg -i librealsense2-dkms-dkms_1.3.14_amd64.deb && \
+#     dpkg -i libssl1.1_1.1.1f-1ubuntu2.16_amd64.deb && \
+#     dpkg -i librealsense2-udev-rules_2.50.0-0~realsense0.6128_amd64.deb && \
+#     dpkg -i librealsense2_2.50.0-0~realsense0.6128_amd64.deb && \
+#     dpkg -i librealsense2-gl_2.50.0-0~realsense0.6128_amd64.deb && \
+#     dpkg -i librealsense2-net_2.50.0-0~realsense0.6128_amd64.deb && \
+#     dpkg -i librealsense2-utils_2.50.0-0~realsense0.6128_amd64.deb && \
+#     dpkg -i librealsense2-dev_2.50.0-0~realsense0.6128_amd64.deb && \
+#     rm -f *.deb *.zip && \
+#     cd realsense-ros/realsense2_camera && \
+#     sed -i 's/find_package(realsense2 2.51.1)/find_package(realsense2)/' CMakeLists.txt && \
+#     rm -rf /var/lib/apt/lists/*
+
+# ~~~~ Humble package install ~~~~
+# RUN mkdir -p /etc/apt/keyrings \
+# && curl -sSf https://librealsense.intel.com/Debian/librealsense.pgp | tee /etc/apt/keyrings/librealsense.pgp > /dev/null \
+# && echo "deb [signed-by=/etc/apt/keyrings/librealsense.pgp] https://librealsense.intel.com/Debian/apt-repo `lsb_release -cs` main" | \
+#     tee /etc/apt/sources.list.d/librealsense.list \
+# && apt-get update \
+# && apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev librealsense2-dbg \
+# && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+
+# ~~~~~ Humble source install ~~~~
+# https://github.com/IntelRealSense/realsense-ros#installation
+
+# Build librealsense2
+RUN apt-get update \
+&& apt-get install -y \
+    libssl-dev libusb-1.0-0-dev libudev-dev pkg-config libgtk-3-dev cmake \
+    libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev at \
+&& cd /tmp \
+&& wget https://github.com/IntelRealSense/librealsense/archive/master.zip \
+&& unzip master.zip \
+&& cd librealsense-master \
+&& mkdir build && cd build \
+&& cmake ../ -DBUILD_EXAMPLES=true \
+&& make uninstall && make clean && make -j8 && sudo make install \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+
+
+# Add big ROS packages
+RUN apt-get update \
+&& apt-get install -y \
+    ros-${ROS_DISTRO}-navigation2 \
+    ros-${ROS_DISTRO}-nav2-bringup \
+    ros-${ROS_DISTRO}-moveit \
+    ros-${ROS_DISTRO}-robot-localization \
+    ros-${ROS_DISTRO}-vision-msgs \
+    ros-${ROS_DISTRO}-realsense2-* \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+
 
 # ------------------------------------------------------------------
 # Most Python dependencies are installed by rosdep (see package.xml)
@@ -104,6 +140,9 @@ ENV PYTHONWARNINGS="ignore:::setuptools.command.install,ignore:::setuptools.comm
 RUN apt-get update \
 &&  rosdep update \
 &&  touch /root/.apt-rosdep-updated
+
+
+
 
 
 # --------------------------------
@@ -146,14 +185,6 @@ RUN cd ${ROS_WS} \
 && colcon build --packages-select rplidar_ros --symlink-install \
 && colcon build --packages-select roboclaw_interfaces roboclaw_driver2
 
-
-# -----------------------
-# Add additional packages
-# -----------------------
-RUN apt-get update \
-&& apt-get install -y \
-    ros-${ROS_DISTRO}-vision-msgs \
-&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 # ----------------
 # Add this package
