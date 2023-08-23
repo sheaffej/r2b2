@@ -11,6 +11,9 @@ def generate_launch_description():
 
     actions = []
 
+    # ----------------
+    # Launch Arguments
+    # ----------------
     actions.append(DeclareLaunchArgument('test_mode', default_value='False'))
     actions.append(DeclareLaunchArgument('sim_mode', default_value='False'))
     actions.append(DeclareLaunchArgument('run_nav', default_value='True'))
@@ -49,8 +52,11 @@ def generate_launch_description():
     actions.append(LogInfo(msg=['Arg: nav_params_file = ', LaunchConfiguration('nav_params_file')]))
     actions.append(LogInfo(msg=['Arg: map_file = ', LaunchConfiguration('map_file')]))
 
+    # -----------------------------
+    # Hardware robot nodes
+    # (Not used during simulations)
+    # -----------------------------
     actions.append(
-        # Hardware robot nodes. Not used during simulations
         GroupAction(
             condition=LaunchConfigurationEquals('sim_mode', 'False'),
             actions=[
@@ -107,6 +113,9 @@ def generate_launch_description():
         )
     )
 
+    # ------------------------
+    # Robot Localization (EKF)
+    # ------------------------
     actions.append(
         Node(
             package='robot_localization',
@@ -123,6 +132,9 @@ def generate_launch_description():
         )
     )
 
+    # ---------------------
+    # Robot State Publisher
+    # ---------------------
     actions.append(
         Node(
             condition=LaunchConfigurationEquals('run_core_nodes', 'True'),
@@ -137,6 +149,9 @@ def generate_launch_description():
         )
     )
 
+    # ----
+    # Nav2
+    # ----
     include_nav2 = IncludeLaunchDescription(
         launch_description_source=[LaunchConfiguration('ros_ws'), '/src/r2b2/launch/nav2/bringup_launch.py'],
         launch_arguments={

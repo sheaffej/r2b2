@@ -1,0 +1,28 @@
+https://design.ros2.org/articles/roslaunch.html
+- Launch descriptions are made of up of an ordered list of actions and groups of actions. 
+- Actions represent an intention to do something, but a launch description is parsed first, then actions are taken in order of definition later.
+    - This allows actions to be interpreted and then statically introspected without actually executing any of them unless desired.
+
+Generic launch tool: https://github.com/ros2/launch
+ROS specific extensions: https://github.com/ros2/launch_ros
+
+
+sim.launch.py
+=============
+Lauch Gazebo and nav nodes, but not the hardware nodes
+- Calls r2b2.launch.py, but with sim_mode=True
+
+r2b2.launch.py
+==============
+Runs the robot. If sim_mode=False then launches the hardware nodes
+
+
+display.launch.yaml
+===================
+Launches Rviz and RQT
+
+
+compute.launch.yaml
+===================
+Runs sim.launch.py but with run_display=False
+- No Rviz or RQT

@@ -13,6 +13,9 @@ from launch_ros.actions import Node, SetParameter
 def generate_launch_description():
     actions = []
 
+    # ----------------
+    # Launch Arguments
+    # ----------------
     actions.append(DeclareLaunchArgument('run_sim', default_value='True'))
     actions.append(DeclareLaunchArgument('run_core_nodes', default_value='True',
         description='Run non-hardware, non-nav nodes (e.g. robot_state_publisher)')
@@ -58,7 +61,6 @@ def generate_launch_description():
     actions.append(LogInfo(msg=['Arg: gui_config = ', LaunchConfiguration('gui_config')]))
     actions.append(LogInfo(msg=['Arg: gz_bridge_config_file = ', LaunchConfiguration('gz_bridge_config_file')]))
 
-
     # ------------
     # Use sim time
     # ------------
@@ -84,9 +86,9 @@ def generate_launch_description():
         exec_xacro_walls
     )
 
-    # ----------
-    # Run Gazebo
-    # ----------
+    # ------------------------
+    # Run Gazebo and GZ Bridge
+    # ------------------------
     exec_gazebo = ExecuteProcess(
         # condition=LaunchConfigurationEquals('run_sim', 'True'),
         cmd=[
@@ -97,9 +99,6 @@ def generate_launch_description():
         shell=True
     )
 
-    # -------------
-    # ROS GZ Bridge
-    # -------------
     node_gz_bridge = Node(
         name='ros_gz_bridge',
         package='ros_gz_bridge',
@@ -135,7 +134,6 @@ def generate_launch_description():
         ]
     )
     actions.append(TimerAction(period=10.0, actions=[include_r2b2]))
-
 
     # ------------
     # Rviz and RQT
