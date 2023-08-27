@@ -222,7 +222,7 @@
                 -(Hbox/2 + (Hcylinder - (Hscanner - Hsensor)))
                 Where Hbox = Hscanner - Hcylinder
             -->
-            <origin xyz="${-(scanner_length - scanner_cylinder_dia)/2} 0.0 ${ -(scanner_cylinder_height - scanner_height + (2 * scanner_sensor_height)) / 2 }" />
+            <origin xyz="${(scanner_length - scanner_cylinder_dia)/2} 0.0 ${ -(scanner_cylinder_height - scanner_height + (2 * scanner_sensor_height)) / 2 }" />
             <material name="Black" />
             <gazebo reference="scanner_box_visual">
                 <material>Gazebo/Black</material>
@@ -333,7 +333,9 @@
     </joint>
 
     <joint name="camera_link_joint" type="fixed">
-        <origin xyz="0.143 0.0 ${0.185 - base_cg_height}" rpy="0.0 0.3491 0.0"/>
+        <!-- <origin xyz="0.143 0.0 ${0.185 - base_cg_height}" rpy="0.0 0.3491 0.0"/> -->
+        <origin xyz="0.143 0.0 ${0.185 - base_cg_height}" rpy="0.0 0.0 0.0"/>
+
         <parent link="base_link"/>
         <child link="camera_link"/>
     </joint>
@@ -346,7 +348,15 @@
     </joint>
 
     <joint name="scanner_link_joint" type="fixed">
-        <origin xyz="0.080 0 ${0.228 - base_cg_height}" rpy="0.0 0.0 0.0"/>
+        <!--
+            The RPLidar A1 has the 0-deg angle opposite of the X-axis. In other words, the motor
+            is in front be desitn. But we have the motor in the back. So we need to rotate the joint
+            by 180-deg on the actual robot.
+            
+            However, in Gazebo the laser scan plugin has 0-deg on the x-axis. So we don't need to
+            rotate it.
+            -->
+        <origin xyz="0.080 0 ${0.228 - base_cg_height}" rpy="0.0 0.0 ${pi}"/>
         <parent link="base_link"/>
         <child link="scanner_link"/>
     </joint>

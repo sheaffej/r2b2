@@ -10,24 +10,26 @@
         "PYTHONDONTWRITEBYTECODE": "1"
     },
 
-	"settings": { 
-		"python.pythonPath": "/usr/bin/python3",
-		"python.autoComplete.extraPaths": [
-			"/opt/ros/galactic/lib/python3.8/site-packages",
-		// 	"/ros2/install/r2b2_base/lib/python3.8/site-packages",
-        //     "/ros2/install/roboclaw_interfaces/lib/python3.8/site-packages"
-		],		
-		"python.linting.pylintEnabled": true,
-		"python.linting.enabled": true,
-        "python.linting.flake8Enabled": true,
-        "terminal.integrated.cwd": "/ros2"
-	},
+    "customizations": {
+        "vscode": {
+            "settings": { 
+                "python.pythonPath": "/usr/bin/python3",
+                "python.autoComplete.extraPaths": [
+                    "/opt/ros/galactic/lib/python3.8/site-packages",
+                // 	"/ros2/install/r2b2_base/lib/python3.8/site-packages",
+                //     "/ros2/install/roboclaw_interfaces/lib/python3.8/site-packages"
+                ],		
+                // "python.linting.pylintEnabled": true,
+                // "python.linting.enabled": true,
+                // "python.linting.flake8Enabled": true,
+                "terminal.integrated.cwd": "/ros2"
+            },
+            "extensions": [
+                "ms-python.python",
+                "njpwerner.autodocstring",
+                "ms-python.flake8"
+            ]    
+        }
+    }
 
-	"appPort": [],
-
-	"extensions": [
-		"ms-python.python",
-        "njpwerner.autodocstring",
-        "ms-python.flake8"
-	]
 }

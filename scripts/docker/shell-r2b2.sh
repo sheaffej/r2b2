@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DOCKER_IMAGE="r2b2-robot"
-CONTAINER_NAME="r2b2-robot-it"
+# CONTAINER_NAME="r2b2-robot-it"
 LABEL="r2b2"
 
 # MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -10,7 +10,6 @@ DOWNLOADS_DIR=~/Downloads
 CODE_MOUNT="/workspaces"
 
 docker run -it --rm \
---name ${CONTAINER_NAME} \
 --label ${LABEL} \
 --net host \
 --privileged \

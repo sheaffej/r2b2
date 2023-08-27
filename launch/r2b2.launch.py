@@ -2,7 +2,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo, GroupAction, TimerAction
 from launch.conditions import LaunchConfigurationEquals
 from launch.substitutions import LaunchConfiguration, Command
-from launch_ros.actions import Node
+from launch_ros.actions import Node, SetRemap
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 
@@ -28,7 +28,7 @@ def generate_launch_description():
     )
     actions.append(
         DeclareLaunchArgument('nav_params_file',
-            default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/params/nav2_params.yaml']
+            default_value=[LaunchConfiguration('ros_ws'), '/src/r2b2/config/params/nav2_params.humble.yaml']
         )
     )
     actions.append(
@@ -84,23 +84,43 @@ def generate_launch_description():
                         'speed_command_topic': 'roboclaw/speed_command',
                         'roboclaw_front_stats_topic': 'roboclaw/stats',
                         'log_level': 'info',
-                        'publish_odom_tf': False
+                        'publish_odom_tf': True,
+                        'base_frame_id': 'base_footprint',
+                        'odom_frame_id': 'odom'
                     }]
                 ),
 
-                Node(
-                    name='rplidar',
+                # Node(
+                #     name='rplidar',
+                #     condition=LaunchConfigurationEquals('test_mode', 'False'),
+                #     package='rplidar_ros',
+                #     executable='rplidar_composition',
+                #     parameters=[{
+                #         'serial_port': '/dev/ttyUSB0',
+                #         'serial_baudrate': 115200,
+                #         'frame_id': 'scanner_link',
+                #         'inverted': False,
+                #         'angle_compensate': True
+                #     }],
+                #     remappings=[
+                #         ('/scan', '/base/scan')
+                #     ]
+                # ),
+                SetRemap(src='/scan', dst='/base/scan'),
+                IncludeLaunchDescription(
                     condition=LaunchConfigurationEquals('test_mode', 'False'),
-                    package='rplidar_ros',
-                    executable='rplidar_composition',
-                    parameters=[{
+                #     launch_description_source=[FindPackageShare('sllidar_ros2'), '/launch/sllidar_a1_launch.py'],
+                    launch_description_source=[FindPackageShare('rplidar_ros'), '/launch/rplidar_a1_launch.py'],
+                    launch_arguments={
                         'serial_port': '/dev/ttyUSB0',
-                        'serial_baudrate': 115200,
-                        'frame_id': 'scanner_link',
-                        'inverted': False,
-                        'angle_compensate': True
-                    }]
+                        'serial_baudrate': '115200',
+                        'inverted': 'True',
+                        'frame_id': 'scanner_link'
+                        # 'inverted': False,
+                        # 'angle_compensate': True
+                    }.items()
                 ),
+
 
                 IncludeLaunchDescription(
                     condition=LaunchConfigurationEquals('test_mode', 'False'),
@@ -160,7 +180,7 @@ def generate_launch_description():
             #   'use_namespace': 'false'
             'slam': LaunchConfiguration('slam'),
             'map': LaunchConfiguration('map_file'),
-            # 'use_sim_time': 'true',
+            'use_sim_time': LaunchConfiguration('sim_mode'),
             'params_file': LaunchConfiguration('nav_params_file'),
             #   'autostart':
             # 'use_composition': 'False',

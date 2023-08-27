@@ -11,7 +11,7 @@ launch:
     default: "$(var ros_ws)/src/r2b2/config/devtools/config.rviz"
 - arg:
     name: "use_sim_time"
-    default: 'True'
+    default: 'False'
 
 - node:
     pkg: rqt_gui

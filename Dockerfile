@@ -172,7 +172,8 @@ RUN git clone https://github.com/sheaffej/r2b2-base.git
 # # ~~~~ Galactic ~~~~
 # RUN git clone https://github.com/Slamtec/sllidar_ros2.git
 # ~~~~ Humble ~~~~
-RUN git clone https://github.com/babakhani/rplidar_ros2
+# RUN git clone https://github.com/babakhani/rplidar_ros2
+RUN git clone --branch ros2 https://github.com/Slamtec/rplidar_ros.git
 
 
 # --------------------------------------
