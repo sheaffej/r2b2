@@ -1,0 +1,6 @@
+DOCKER_IMAGE="r2b2-robot"
+DOCKER_CONTAINER="r2b2-robot"
+
+HOST_PROJ_DIR="${HOME}/r2b2_project"
+CONTAINER_CODE_MOUNT_DIR="/workspaces"
+DOWNLOADS_DIR="${HOME}/Downloads"

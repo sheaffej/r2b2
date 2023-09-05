@@ -3,7 +3,8 @@
 	"context": "..",
 	"dockerFile": "../Dockerfile",
 	"runArgs": [
-		"--name", "r2b2-robot-vscode"
+		"--name", "r2b2-robot-vscode",
+        "--network", "host"
 	],
 
     "containerEnv": {

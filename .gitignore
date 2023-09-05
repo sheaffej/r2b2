@@ -1,7 +1,8 @@
 .DS_Store
-notes.txt
-_*.txt
+_*.*_
 config/urdf/r2b2.urdf
 gazebo/models/walls.sdf
+gazebo/worlds/megacavern.sdf
 custom-builds/
 __pycache__
+private/

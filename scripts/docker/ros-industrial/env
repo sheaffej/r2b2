@@ -1,0 +1,7 @@
+DOCKER_IMAGE="ros-industrial"
+DOCKER_CONTAINER="ros-industrial"
+
+HOST_PROJ_DIR="${HOME}/r2b2_project"
+CONTAINER_CODE_MOUNT_DIR="/workspaces"
+DOWNLOADS_DIR="${HOME}/Downloads"
+

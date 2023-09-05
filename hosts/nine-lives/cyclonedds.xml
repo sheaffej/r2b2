@@ -3,7 +3,7 @@
     <Domain Id="any">
         <General>
             <Interfaces>
-                <NetworkInterface name="enx8049710f6e3b" />
+                <NetworkInterface name="wlp3s0" />
             </Interfaces>
             <AllowMulticast>spdp</AllowMulticast>
         </General>
@@ -14,7 +14,6 @@
                 <Peer Address="b2-nuc8.boltz" />
                 <Peer Address="ros2-compute.boltz" />
                 <Peer Address="jaguar.boltz" />
-                <Peer Address="lap-cat.boltz" />
                 <Peer Address="ros2-dev.boltz" />
             </Peers>
         </Discovery>

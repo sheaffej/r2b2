@@ -14,7 +14,7 @@
                 <Peer Address="b2-nuc8.boltz" />
                 <Peer Address="ros2-compute.boltz" />
                 <Peer Address="jaguar.boltz" />
-                <Peer Address="lap-cat.boltz" />
+                <Peer Address="nine-lives.boltz" />
                 <Peer Address="ros2-dev.boltz" />
             </Peers>
         </Discovery>

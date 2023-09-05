@@ -126,7 +126,8 @@ def generate_launch_description():
                     condition=LaunchConfigurationEquals('test_mode', 'False'),
                     launch_description_source=[FindPackageShare('realsense2_camera'), '/launch/rs_launch.py'],
                     launch_arguments={
-                        'align_depth.enable': 'True'
+                        'align_depth.enable': 'True',
+                        'pointcloud.enable': 'True'
                     }.items()
                 ),
             ]

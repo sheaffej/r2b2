@@ -18,7 +18,7 @@ function push_dir_to_host {
     # To copy SYNC_DIR into HOST_PROJ_DIR, neither should have trailing slashes below
     # Filter out just the display of the .git changes
     rsync -azi -e ssh --delete \
-    --exclude=".pytest_cache/" --exclude="*.pyc" --exclude="__pycache__"\
+    --exclude=".pytest_cache/" --exclude="*.pyc" --exclude="__pycache__" --exclude dump \
     "${LOCAL_PROJ_DIR}/${SYNC_DIR}" \
     "${HOST}:${HOST_PROJ_DIR}" | grep -v "/.git/"
 }
